@@ -6,7 +6,7 @@ import useAuthStore from '../store/useAuthStore';
 import { api } from '../utils/api';
 import { formatDate, formatPrice, showToast } from '../utils/helpers';
 
-const Orders = ({openLogin}) => {
+const Orders = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuthStore();
   const [activeTab, setActiveTab] = useState('profile');
@@ -14,8 +14,9 @@ const Orders = ({openLogin}) => {
   const [downloads, setDownloads] = useState([]);
 
   useEffect(() => {
-    if (!isAuthenticated) { 
-    openLogin();  
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
     }
 
     if (activeTab === 'orders') {
@@ -27,8 +28,16 @@ const Orders = ({openLogin}) => {
 
   const fetchOrders = async () => {
     try {
-      const response = await api.getAll();
-      setOrders(response.data || mockOrders);
+      const userId = localStorage.getItem('userId');
+      if (!userId) {
+        console.error('No userId found');
+        setOrders(mockOrders);
+        return;
+      }
+
+      const response = await api.getOrderHistory(userId);
+      console.log('Order history data:', response);
+      setOrders(response || mockOrders);
     } catch (error) {
       console.error('Error fetching orders:', error);
       setOrders(mockOrders);
@@ -37,8 +46,35 @@ const Orders = ({openLogin}) => {
 
   const fetchDownloads = async () => {
     try {
-      const response = await api.getAll();
-      setDownloads(response.data || mockDownloads);
+      const userId = localStorage.getItem('userId');
+      if (!userId) {
+        console.error('No userId found');
+        setDownloads(mockDownloads);
+        return;
+      }
+
+      const response = await api.getOrders(userId);
+      console.log('Downloads response (raw):', response);
+      
+      // Transform orders response to downloads format
+      // Response structure: [{order_id, product_id, product_name, selected_type, quantity, price, images, category, ...}]
+      const formattedDownloads = response.map(item => ({
+        id: item.product_id,
+        name: item.product_name,
+        purchaseDate: item.created_at || new Date().toISOString(),
+        formats: [item.selected_type],
+        productId: item.product_id,
+        category: item.category,
+        price: item.price,
+        image: item.images?.[0],
+        images: item.images,
+        orderId: item.order_id,
+        paymentId: item.payment_id,
+        quantity: item.quantity
+      }));
+      
+      console.log('Formatted downloads:', formattedDownloads);
+      setDownloads(formattedDownloads || mockDownloads);
     } catch (error) {
       console.error('Error fetching downloads:', error);
       setDownloads(mockDownloads);
@@ -172,25 +208,39 @@ const OrdersTab = ({ orders }) => {
     );
   }
 
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'paid':
+        return 'bg-green-100 text-green-700';
+      case 'pending':
+        return 'bg-yellow-100 text-yellow-700';
+      case 'failed':
+        return 'bg-red-100 text-red-700';
+      default:
+        return 'bg-gray-100 text-gray-700';
+    }
+  };
+
   return (
     <div className="space-y-4">
       {orders.map((order) => (
-        <div key={order.id} className="border border-gray-200 rounded-lg p-4">
+        <div key={order.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between mb-2">
             <div>
-              <p className="font-semibold text-gray-800">Order #{order.id}</p>
-              <p className="text-sm text-gray-600">{formatDate(order.date)}</p>
+              <p className="font-semibold text-gray-800">{order.id.substring(0, 8)}...</p>
+              <p className="text-sm text-gray-600">{formatDate(order.created_at)}</p>
             </div>
             <div className="text-right">
-              <p className="font-bold text-red-600">{formatPrice(order.total)}</p>
-              <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
-                {order.status}
+              <p className="font-bold text-red-600">{formatPrice(order.total_amount)}</p>
+              <span className={`text-xs px-2 py-1 rounded font-medium ${getStatusColor(order.status)}`}>
+                {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
               </span>
             </div>
           </div>
-          <div className="text-sm text-gray-600">
-            {order.items.length} item{order.items.length !== 1 ? 's' : ''}
-          </div>
+          {order.payment_id && (
+            <p className="text-xs text-gray-500 mt-2">Payment ID: {order.payment_id}</p>
+          )}
+          <p className="text-xs text-gray-500">Last updated: {formatDate(order.updated_at)}</p>
         </div>
       ))}
     </div>
@@ -198,8 +248,51 @@ const OrdersTab = ({ orders }) => {
 };
 
 const DownloadsTab = ({ downloads }) => {
-  const handleDownload = (download) => {
-    showToast(`Downloading ${download.name}...`, 'success');
+  const [downloading, setDownloading] = useState(null);
+
+  const handleDownload = async (download) => {
+    // Use selected_type (DST/JEF) from the download object
+    const fileType = download.formats[0]?.toLowerCase() || 'dst';
+    
+    // Use orderId as payment_id (they should match in your system)
+    const paymentId = download.paymentId;
+
+    if (!paymentId) {
+      showToast('Order ID not found for this download', 'error');
+      return;
+    }
+
+    setDownloading(download.id);
+    
+    try {
+      console.log(`Downloading ${fileType} for order ${paymentId}`);
+      
+      // Call backend to get download URL
+      const response = await api.getProductDownloadUrl(paymentId, fileType);
+      
+      // Get the appropriate URL from response
+      const downloadUrl = response[`${fileType}_url`];
+      
+      if (!downloadUrl) {
+        showToast(`Download URL not available for ${fileType}`, 'error');
+        return;
+      }
+
+      // Trigger download
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = `${download.name}-${fileType}.zip`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      showToast(`${download.name} (${fileType.toUpperCase()}) downloaded successfully!`, 'success');
+    } catch (error) {
+      console.error('Download error:', error);
+      showToast(error.message || `Failed to download ${fileType}`, 'error');
+    } finally {
+      setDownloading(null);
+    }
   };
 
   if (downloads.length === 0) {
@@ -214,26 +307,45 @@ const DownloadsTab = ({ downloads }) => {
   return (
     <div className="space-y-4">
       {downloads.map((download) => (
-        <div key={download.id} className="border border-gray-200 rounded-lg p-4 flex items-center justify-between">
-          <div>
+        <div key={download.id} className="border border-gray-200 rounded-lg p-4 flex items-start gap-4">
+          {/* Product Image */}
+          {download.image && (
+            <img
+              src={download.image}
+              alt={download.name}
+              className="w-24 h-24 object-cover rounded-lg shrink-0"
+            />
+          )}
+          
+          {/* Product Details */}
+          <div className="flex-1">
             <p className="font-semibold text-gray-800">{download.name}</p>
+            {download.category && (
+              <p className="text-sm text-gray-600">Category: {download.category}</p>
+            )}
             <p className="text-sm text-gray-600">
               Purchased on {formatDate(download.purchaseDate)}
             </p>
             <div className="flex gap-2 mt-2">
               {download.formats.map((format) => (
-                <span key={format} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
+                <span key={format} className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded">
                   {format}
                 </span>
               ))}
             </div>
+            {download.price && (
+              <p className="text-sm font-medium text-red-600 mt-2">{formatPrice(download.price)}</p>
+            )}
           </div>
+
+          {/* Download Button */}
           <button
             onClick={() => handleDownload(download)}
-            className="flex items-center space-x-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+            disabled={downloading === download.id}
+            className="flex items-center space-x-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Download className="h-4 w-4" />
-            <span>Download</span>
+            <span>{downloading === download.id ? 'Downloading...' : 'Download'}</span>
           </button>
         </div>
       ))}
