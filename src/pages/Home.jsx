@@ -4,7 +4,6 @@ import { ArrowRight, Sparkles, TrendingUp } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import { api } from '../utils/api';
 
-<<<<<<< HEAD
 const ProductCardSkeleton = () => (
   <div className="bg-white rounded-lg overflow-hidden shadow-md animate-pulse">
     <div className="w-full h-48 sm:h-56 bg-gray-300 rounded-t-lg"></div>
@@ -19,8 +18,6 @@ const ProductCardSkeleton = () => (
   </div>
 );
 
-=======
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
 const Home = () => {
   const [newArrivals, setNewArrivals] = useState([]);
   const [topSellers, setTopSellers] = useState([]);
@@ -41,7 +38,6 @@ const Home = () => {
 
   const fetchProducts = async () => {
     try {
-<<<<<<< HEAD
       const latestProducts = await api.fetchLatestProducts();
       setNewArrivals(Array.isArray(latestProducts) ? latestProducts.slice(0, 4) : []);
 
@@ -51,17 +47,6 @@ const Home = () => {
       console.error('Error fetching products:', error);
       setNewArrivals([]);
       setTopSellers([]);
-=======
-      const response = await productsAPI.getAll();
-      const products = response.data || mockProducts;
-
-      setNewArrivals(products.slice(0, 4));
-      setTopSellers(products.slice(4, 8));
-    } catch (error) {
-      console.error('Error fetching products:', error);
-      setNewArrivals(mockProducts.slice(0, 4));
-      setTopSellers(mockProducts.slice(4, 8));
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
     } finally {
       setLoading(false);
     }
@@ -207,15 +192,9 @@ const Home = () => {
           </div>
 
           {loading ? (
-<<<<<<< HEAD
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
               {[1, 2, 3, 4].map((i) => (
                 <ProductCardSkeleton key={i} />
-=======
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="bg-gray-100 rounded-2xl h-96 animate-pulse" />
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
               ))}
             </div>
           ) : (
@@ -251,15 +230,9 @@ const Home = () => {
           </div>
 
           {loading ? (
-<<<<<<< HEAD
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
               {[1, 2, 3, 4].map((i) => (
                 <ProductCardSkeleton key={i} />
-=======
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="bg-gray-100 rounded-2xl h-96 animate-pulse" />
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
               ))}
             </div>
           ) : (
@@ -273,11 +246,7 @@ const Home = () => {
       </section>
 
       {/* Add custom animations to your global CSS */}
-<<<<<<< HEAD
       <style>{`
-=======
-      <style jsx>{`
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
         @keyframes float-slow {
           0%, 100% { transform: translateY(0) rotate(0deg); }
           50% { transform: translateY(-15px) rotate(3deg); }
@@ -309,99 +278,4 @@ const Home = () => {
   );
 };
 
-<<<<<<< HEAD
-=======
-const mockProducts = [
-  { 
-    id: 1, 
-    name: 'Floral Blouse Design', 
-    category: 'Blouse Designs', 
-    price: 299, 
-    images_urls: ['https://res.cloudinary.com/ddvhysyk4/image/upload/v1761849278/Screenshot_2025-10-31_000109_md0wnt.png'], 
-    formats: ['DST', 'JEF'] 
-  },
-  { 
-    id: 2, 
-    name: 'Traditional Saree Border', 
-    category: 'Saree Borders', 
-    price: 399, 
-    images_urls: ['https://res.cloudinary.com/ddvhysyk4/image/upload/v1761849278/Screenshot_2025-10-30_235433_grlxrx.png'], 
-    formats: ['DST', 'JEF'] 
-  },
-  { 
-    id: 3, 
-    name: 'Modern Kurthi Pattern', 
-    category: 'Kurthi Designs', 
-    price: 349, 
-    images_urls: ['https://res.cloudinary.com/ddvhysyk4/image/upload/v1761849279/Screenshot_2025-10-31_000130_sjl1cq.png'], 
-    formats: ['DST', 'JEF'] 
-  },
-  { 
-    id: 4, 
-    name: 'Kids Cartoon Design', 
-    category: 'Kids Designs', 
-    price: 249, 
-    images_urls: ['https://res.cloudinary.com/ddvhysyk4/image/upload/v1761849279/Screenshot_2025-10-30_235828_lk01hu.png'], 
-    formats: ['DST', 'JEF'] 
-  },
-  { 
-    id: 5, 
-    name: 'Company Logo Design', 
-    category: 'Logos', 
-    price: 499, 
-    images_urls: ['https://res.cloudinary.com/ddvhysyk4/image/upload/v1761849280/Screenshot_2025-10-30_235629_a4uzwl.png'], 
-    formats: ['DST', 'JEF'] 
-  },
-  
-  { 
-    id: 25, 
-    name: 'Back Neck Design', 
-    category: 'Blouse Designs', 
-    price: 339, 
-    images_urls: ['https://res.cloudinary.com/dktx1ebxg/image/upload/v1761849876/Screenshot_2025-10-31_000658_mgeryn.png'], 
-    formats: ['DST', 'JEF'] 
-  },
-  { 
-    id: 26, 
-    name: 'Traditional Border', 
-    category: 'Saree Borders', 
-    price: 399, 
-    images_urls: ['https://res.cloudinary.com/dktx1ebxg/image/upload/v1761849876/Screenshot_2025-10-31_001024_juu14f.png'], 
-    formats: ['DST', 'JEF'] 
-  },
-  { 
-    id: 27, 
-    name: 'Modern Kurthi', 
-    category: 'Kurthi Designs', 
-    price: 369, 
-    images_urls: ['https://res.cloudinary.com/dktx1ebxg/image/upload/v1761849876/Screenshot_2025-10-31_001105_sbkcfx.png'], 
-    formats: ['DST', 'JEF'] 
-  },
-  { 
-    id: 28, 
-    name: 'Educational Kids Design', 
-    category: 'Kids Designs', 
-    price: 259, 
-    images_urls: ['https://res.cloudinary.com/dktx1ebxg/image/upload/v1761849876/Screenshot_2025-10-31_001038_f9k9of.png'], 
-    formats: ['DST', 'JEF'] 
-  },
-  { 
-    id: 29, 
-    name: 'Professional Logo', 
-    category: 'Logos', 
-    price: 519, 
-    images_urls: ['https://res.cloudinary.com/dktx1ebxg/image/upload/v1761849876/Screenshot_2025-10-31_000912_dyw8tc.png'], 
-    formats: ['DST', 'JEF'] 
-  },
-  { 
-    id: 30, 
-    name: 'Sequins Special Design', 
-    category: 'Beads & Sequins', 
-    price: 429, 
-    images_urls: ['https://res.cloudinary.com/ddvhysyk4/image/upload/v1761849278/Screenshot_2025-10-31_000109_md0wnt.png'], 
-    formats: ['DST', 'JEF'] 
-  }
-];
-
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
 export default Home;
