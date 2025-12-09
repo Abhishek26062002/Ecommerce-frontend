@@ -1,17 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
-<<<<<<< HEAD
 import MachineryBasketSidebar from './components/MachineryBasketSidebar';
 import Home from './pages/Home';
 import Products from './pages/Products';
 import ProductDetail from './pages/ProductDetail';
 import Machinery from './pages/Machinery';
-=======
-import Home from './pages/Home';
-import Products from './pages/Products';
-import ProductDetail from './pages/ProductDetail';
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
 import Cart from './pages/Cart';
 import Wishlist from './pages/Wishlist';
 import Login from './pages/Login';
@@ -55,10 +49,7 @@ function App() {
             <Route path="/callback" element={<GoogleCallback />} />
             <Route path="/products" element={<Products />} />
             <Route path="/product/:id" element={<ProductDetail />} />
-<<<<<<< HEAD
             <Route path="/machinery" element={<Machinery />} />
-=======
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
             <Route path="/cart" element={<Cart />} />
             <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/account" element={<Account />} />
@@ -74,10 +65,7 @@ function App() {
           </Routes>
         </main>
         <Footer />
-<<<<<<< HEAD
         <MachineryBasketSidebar />
-=======
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
         {showLogin && <Login onClose={() => setShowLogin(false)} />}
 
         {showIntro && (
@@ -103,8 +91,4 @@ function App() {
   );
 }
 
-<<<<<<< HEAD
 export default App;
-=======
-export default App;
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
