@@ -1,9 +1,14 @@
+<<<<<<< HEAD
 import { useEffect, useState, useCallback } from "react";
+=======
+import { useEffect, useState } from "react";
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
 import { useSearchParams } from "react-router-dom";
 import { Filter, X } from "lucide-react";
 import ProductCard from "../components/ProductCard";
 import { api } from "../utils/api";
 
+<<<<<<< HEAD
 const ProductCardSkeleton = () => (
   <div className="bg-white rounded-lg overflow-hidden shadow-md animate-pulse">
     <div className="w-full h-48 sm:h-56 bg-gray-300 rounded-t-lg"></div>
@@ -23,6 +28,8 @@ const CategorySetSkeleton = () => (
   <div className="w-full py-4 rounded-xl border border-gray-300 bg-gray-100 animate-pulse h-20"></div>
 );
 
+=======
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
 const Products = () => {
   const [searchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
@@ -32,6 +39,7 @@ const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedSubCategory, setSelectedSubCategory] = useState(null);
   const [subCategories, setSubCategories] = useState([]);
+<<<<<<< HEAD
   const [loadingSubCategories, setLoadingSubCategories] = useState(false);
   const [loadingProducts, setLoadingProducts] = useState(false);
   const [subCategoryLoading, setSubCategoryLoading] = useState(false);
@@ -43,12 +51,21 @@ const Products = () => {
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
+=======
+
+  const [sortBy, setSortBy] = useState("newest");
+  const [showFilters, setShowFilters] = useState(false);
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
 
 useEffect(() => {
   const categoryFromUrl = searchParams.get("category");
   if (!products.length || !categoryFromUrl) return;
 
+<<<<<<< HEAD
   handleCategoryChange(categoryFromUrl);
+=======
+  handleCategoryChange(categoryFromUrl); // <-- fetch subcategories
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
 }, [searchParams, products]);
 
 
@@ -82,6 +99,11 @@ useEffect(() => {
         break;
       case "newest":
       default:
+<<<<<<< HEAD
+=======
+        // If you have createdAt, you can sort by it
+        // sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
         break;
     }
 
@@ -91,12 +113,19 @@ useEffect(() => {
   // Fetch ALL products once
   const fetchProducts = async () => {
     try {
+<<<<<<< HEAD
       const data = await api.fetchProductsInfiniteScroll(50, 0);
       const allProducts = data.products || [];
       setProducts(allProducts);
       setFilteredProducts(applySort(allProducts, "newest"));
       setOffset(50);
       setHasMore(data.hasMore);
+=======
+      const data = await api.fetchProducts();
+      const all = data || [];
+      setProducts(all);
+      setFilteredProducts(applySort(all, "newest"));
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
     } catch (error) {
       console.error("Error fetching products:", error);
       setProducts([]);
@@ -106,6 +135,7 @@ useEffect(() => {
     }
   };
 
+<<<<<<< HEAD
   const fetchMoreProducts = async () => {
     if (!hasMore || loadingMore) return;
     
@@ -124,6 +154,8 @@ useEffect(() => {
     }
   };
 
+=======
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
   useEffect(() => {
     fetchProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -163,6 +195,7 @@ useEffect(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortBy]);
 
+<<<<<<< HEAD
   useEffect(() => {
     if (!categoryToFetch) return;
     
@@ -266,12 +299,52 @@ useEffect(() => {
       console.log('Setting subCategoryLoading to FALSE');
       setSubCategoryLoading(false);
       console.log('=== END SUBCATEGORY CHANGE ===');
+=======
+  // CATEGORY CLICK
+  const handleCategoryChange = async (category) => {
+    setSelectedCategory(category);
+    setSelectedSubCategory(null);
+    setSubCategories([]);
+    setFilteredProducts([]); // hide products until we know what to show
+
+    if (category === "all") {
+      // Just show all products again
+      setFilteredProducts(applySort(products, sortBy));
+      return;
+    }
+
+    try {
+      const data = await api.fetchSubCategories(category);
+      setSubCategories(data || []); // show subcategories INSTEAD of products
+    } catch (err) {
+      console.log(err);
+      setSubCategories([]);
+    }
+  };
+
+  // SUBCATEGORY CLICK
+  const handleSubCategoryChange = async (sub) => {
+    setSelectedSubCategory(sub);
+
+    try {
+      const data = await api.fetchProductsBySubCategory(selectedCategory, sub);
+      setFilteredProducts(applySort(data || [], sortBy));
+      // Optional: hide subcategories after selection
+      // setSubCategories([]);
+    } catch (err) {
+      console.log(err);
+      setFilteredProducts([]);
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
     }
 
     if (window.innerWidth < 768) {
       setTimeout(() => setShowFilters(false), 100);
     }
+<<<<<<< HEAD
   }, [sortBy]);
+=======
+  };
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
 
   const handleSortChange = (value) => {
     setSortBy(value);
@@ -283,6 +356,7 @@ useEffect(() => {
 
 
   const isShowingSubCategorySelection =
+<<<<<<< HEAD
     selectedCategory !== "all" &&
     !selectedSubCategory &&
     subCategories.length > 0;
@@ -324,6 +398,11 @@ useEffect(() => {
     subCategoriesLength: subCategories.length,
     filteredProductsLength: filteredProducts.length
   });
+=======
+    subCategories.length > 0 &&
+    selectedCategory !== "all" &&
+    !selectedSubCategory;
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -332,6 +411,10 @@ useEffect(() => {
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl font-bold text-gray-800">{selectedCategory}</h1>
 
+<<<<<<< HEAD
+=======
+          {/* Mobile filter button */}
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
           <button
             onClick={() => setShowFilters(true)}
             className="md:hidden flex items-center space-x-2 bg-red-600 text-white px-4 py-2 rounded-lg shadow-md active:scale-95 transition-transform"
@@ -341,6 +424,7 @@ useEffect(() => {
           </button>
         </div>
 
+<<<<<<< HEAD
         {/* Mobile Category Navigation */}
         <div className="md:hidden mb-6 -mx-4 px-4">
           <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
@@ -362,6 +446,10 @@ useEffect(() => {
         </div>
 
         <div className="flex flex-col md:flex-row gap-8">
+=======
+        <div className="flex flex-col md:flex-row gap-8">
+          {/* Desktop Sidebar */}
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
           <aside className="hidden md:block w-full md:w-64 space-y-6">
             <div className="bg-white p-6 rounded-xl border border-gray-300">
               <h3 className="font-semibold text-gray-800 mb-4">Categories</h3>
@@ -370,12 +458,19 @@ useEffect(() => {
                   <button
                     key={category}
                     onClick={() => handleCategoryChange(category)}
+<<<<<<< HEAD
                     disabled={loadingSubCategories}
+=======
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
                     className={`block w-full text-left px-4 py-2 rounded-lg transition-colors ${
                       selectedCategory === category
                         ? "bg-red-600 text-white"
                         : "bg-gray-50 text-gray-700 hover:bg-gray-100"
+<<<<<<< HEAD
                     } ${loadingSubCategories ? "opacity-50 cursor-not-allowed" : ""}`}
+=======
+                    }`}
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
                   >
                     {category === "all" ? "All Products" : category}
                   </button>
@@ -398,6 +493,10 @@ useEffect(() => {
             </div>
           </aside>
 
+<<<<<<< HEAD
+=======
+          {/* Mobile Filter Drawer */}
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
           <div
             className={`md:hidden fixed inset-0 z-40 transition-opacity duration-300 ${
               showFilters
@@ -416,6 +515,10 @@ useEffect(() => {
                   showFilters ? "translate-y-0" : "translate-y-full"
                 }`}
             >
+<<<<<<< HEAD
+=======
+              {/* Header */}
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
               <div className="sticky top-0 bg-white border-b border-gray-200 px-4 py-4 flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-gray-800">Filters</h2>
                 <button
@@ -426,7 +529,13 @@ useEffect(() => {
                 </button>
               </div>
 
+<<<<<<< HEAD
               <div className="p-4 space-y-6">
+=======
+              {/* Filter content */}
+              <div className="p-4 space-y-6">
+                {/* Categories */}
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
                 <div>
                   <h3 className="font-semibold text-gray-800 mb-3 text-sm">
                     Categories
@@ -436,12 +545,19 @@ useEffect(() => {
                       <button
                         key={category}
                         onClick={() => handleCategoryChange(category)}
+<<<<<<< HEAD
                         disabled={loadingSubCategories}
+=======
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
                         className={`px-3 py-2 rounded-lg text-sm font-medium ${
                           selectedCategory === category
                             ? "bg-red-600 text-white shadow-md"
                             : "bg-gray-100 text-gray-700 active:bg-gray-200"
+<<<<<<< HEAD
                         } ${loadingSubCategories ? "opacity-50 cursor-not-allowed" : ""}`}
+=======
+                        }`}
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
                       >
                         {category === "all" ? "All" : category}
                       </button>
@@ -449,6 +565,10 @@ useEffect(() => {
                   </div>
                 </div>
 
+<<<<<<< HEAD
+=======
+                {/* Sort By */}
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
                 <div>
                   <h3 className="font-semibold text-gray-800 mb-3 text-sm">
                     Sort By
@@ -476,6 +596,10 @@ useEffect(() => {
                 </div>
               </div>
 
+<<<<<<< HEAD
+=======
+              {/* Apply Button */}
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
               <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4">
                 <button
                   onClick={() => setShowFilters(false)}
@@ -487,6 +611,7 @@ useEffect(() => {
             </div>
           </div>
 
+<<<<<<< HEAD
           <main className="flex-1">
             {loading ? (
               <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
@@ -523,10 +648,21 @@ useEffect(() => {
                   <div className="border-b border-gray-300 mt-2"></div>
                 </div>
 
+=======
+          {/* MAIN CONTENT */}
+          <main className="flex-1">
+            {loading ? (
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                loading.....
+              </div>
+            ) : isShowingSubCategorySelection ? (
+              <>
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
                 <p className="text-gray-600 mb-4">
                   Choose a subcategory in{" "}
                   <span className="font-semibold">{selectedCategory}</span>
                 </p>
+<<<<<<< HEAD
                 {loadingSubCategories ? (
                   <div className="flex flex-col gap-3">
                     {[...Array(4)].map((_, i) => (
@@ -556,11 +692,35 @@ useEffect(() => {
                 )}
               </>
             ) : selectedSubCategory && !subCategoryLoading && filteredProducts.length === 0 ? (
+=======
+                <div className="flex flex-col gap-3">
+  {subCategories.map((sub) => (
+    <button
+      key={sub}
+      onClick={() => handleSubCategoryChange(sub)}
+      className={`w-full py-4 rounded-xl border text-xl lg:text-4xl font-semibold tracking-wide text-center text-red-600 transition-all ${
+        selectedSubCategory === sub
+          ? "bg-red-600 text-white border-red-600 shadow-md scale-[1.02]"
+          : "bg-white text-gray-900 border-gray-300 hover:bg-gray-100"
+      }`}
+    >
+     {selectedCategory} - {sub.toUpperCase()}
+    </button>
+  ))}
+</div>
+
+              </>
+            ) : filteredProducts.length === 0 ? (
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
               <div className="bg-white p-12 rounded-lg shadow-md text-center">
                 <p className="text-gray-500 text-lg">No products found</p>
               </div>
             ) : (
               <>
+<<<<<<< HEAD
+=======
+                {/* Breadcrumbs with bottom line */}
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
                 {(selectedCategory !== "all" || selectedSubCategory) && (
                   <div className="mb-4">
                     <div className="flex items-center gap-2 text-sm text-gray-700">
@@ -602,6 +762,10 @@ useEffect(() => {
                       )}
                     </div>
 
+<<<<<<< HEAD
+=======
+                    {/* Bottom line */}
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
                     <div className="border-b border-gray-300 mt-2"></div>
                   </div>
                 )}
@@ -624,6 +788,7 @@ useEffect(() => {
                     <ProductCard key={product.id} product={product} />
                   ))}
                 </div>
+<<<<<<< HEAD
 
                 {loadingMore && (
                   <div className="flex justify-center mt-8">
@@ -651,6 +816,8 @@ useEffect(() => {
                     <p className="text-gray-500 text-lg">All products loaded</p>
                   </div>
                 )}
+=======
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
               </>
             )}
           </main>

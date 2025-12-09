@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
+<<<<<<< HEAD
 import { useParams, Link, useNavigate } from 'react-router-dom';
+=======
+import { useParams, Link } from 'react-router-dom';
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
 import { ShoppingCart, Heart, Download, ArrowLeft } from 'lucide-react';
 import ProductGallery from '../components/ProductGallery';
 import useCartStore from '../store/useCartStore';
@@ -12,9 +16,12 @@ const ProductDetail = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+<<<<<<< HEAD
   const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   const navigate = useNavigate();
+=======
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
 
   const addToCart = useCartStore(state => state.addItem);
   const addToWishlist = useWishlistStore(state => state.addItem);
@@ -44,9 +51,12 @@ const isInCart = cartItems.some(item => item.id === product?.id);
   const fetchProduct = async () => {
     try {
       const data = await api.fetchProductById(id);
+<<<<<<< HEAD
       console.log('Product data:', data);
       console.log('Machine type:', data?.machine_type);
       console.log('Is array?', Array.isArray(data?.machine_type));
+=======
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
       setProduct(data || []);
     } catch (error) {
       console.error('Error fetching product:', error);
@@ -58,18 +68,26 @@ const isInCart = cartItems.some(item => item.id === product?.id);
   const handleAddToCart = () => {
     // For guest users, fallback to existing add-to-cart behavior
     if (!isAuthenticated) {
+<<<<<<< HEAD
       setIsAddingToCart(true);
       setTimeout(() => {
         addToCart(product);
         showToast('Added to cart!', 'success');
         setIsAddingToCart(false);
       }, 800);
+=======
+      addToCart(product);
+      showToast('Added to cart!', 'success');
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
       return;
     }
 
     // If user is authenticated, send single item to backend
     (async () => {
+<<<<<<< HEAD
       setIsAddingToCart(true);
+=======
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
       try {
         const userId = localStorage.getItem('userId');
         if (!userId) throw new Error('Missing user id');
@@ -119,8 +137,11 @@ const isInCart = cartItems.some(item => item.id === product?.id);
       } catch (err) {
         console.error('Error adding item to server cart:', err);
         showToast('Failed to add to cart', 'error');
+<<<<<<< HEAD
       } finally {
         setIsAddingToCart(false);
+=======
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
       }
     })();
   };
@@ -216,6 +237,7 @@ const isInCart = cartItems.some(item => item.id === product?.id);
             {product?.machine_type && (
               <div className="mb-6">
                 <h3 className="font-semibold text-gray-800 mb-2">Available Formats</h3>
+<<<<<<< HEAD
                 {console.log('Rendering machine_type:', product.machine_type, 'Is array:', Array.isArray(product.machine_type))}
                 <div className="flex flex-wrap gap-2">
                   {Array.isArray(product.machine_type) ? (
@@ -229,6 +251,27 @@ const isInCart = cartItems.some(item => item.id === product?.id);
                       {product.machine_type}
                     </span>
                   )}
+=======
+                <div className="flex flex-wrap gap-2">
+                  {product.machine_type && (
+  <div>
+    {product.machine_type === "Both" ? (
+      <>
+        <span className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg font-medium">
+          DST
+        </span>
+        <span className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg font-medium">
+          JEF
+        </span>
+      </>
+    ) : (
+      <span className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg font-medium">
+        {product.machine_type}
+      </span>
+    )}
+  </div>
+)}
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
                 </div>
               </div>
             )}
@@ -249,12 +292,20 @@ const isInCart = cartItems.some(item => item.id === product?.id);
               <button
   onClick={() => {
     if (isInCart) {
+<<<<<<< HEAD
       navigate("/cart");
+=======
+      window.location.href = "/cart";
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
       return;
     }
     setShowPopup(true);
   }}
+<<<<<<< HEAD
   className={`flex-1 transition-colors flex items-center justify-center space-x-2 ${isInCart ? 'bg-white text-red-600 border-2 rounded-2xl border-red-600' : ' bg-red-600 text-white py-3 px-6 rounded-lg hover:bg-red-700'}`}
+=======
+  className="flex-1 bg-red-600 text-white py-3 px-6 rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center space-x-2"
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
 >
   <ShoppingCart className="h-5 w-5" />
   <span className="font-semibold">{isInCart ? "View Cart" : "Add to Cart"}</span>
@@ -294,6 +345,7 @@ const isInCart = cartItems.some(item => item.id === product?.id);
       <h2 className="text-xl font-bold mb-4 text-gray-800">Select Machine Format</h2>
 
       <div className="flex flex-wrap gap-2 mb-4">
+<<<<<<< HEAD
         {Array.isArray(product.machine_type) ? (
           product.machine_type.map((format) => (
             <button
@@ -319,23 +371,71 @@ const isInCart = cartItems.some(item => item.id === product?.id);
           >
             {product.machine_type}
           </button>
+=======
+        {product.machine_type === "Both" ? (
+          <>
+            <button
+              className={`px-4 py-2 border rounded-lg ${
+                selectedFormat === "DST"
+                  ? "bg-red-600 text-white"
+                  : "bg-gray-100 text-gray-700"
+              }`}
+              onClick={() => setSelectedFormat("DST")}
+            >
+              DST
+            </button>
+
+            <button
+              className={`px-4 py-2 border rounded-lg ${
+                selectedFormat === "JEF"
+                  ? "bg-red-600 text-white"
+                  : "bg-gray-100 text-gray-700"
+              }`}
+              onClick={() => setSelectedFormat("JEF")}
+            >
+              JEF
+            </button>
+          </>
+        ) : (
+            <button
+              className={`px-4 py-2 border rounded-lg ${
+                selectedFormat === product.machine_type
+                  ? "bg-red-600 text-white"
+                  : "bg-gray-100 text-gray-700"
+              }`}
+              onClick={() => setSelectedFormat(product.machine_type)}
+            >
+              {product.machine_type}
+            </button>
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
         )}
       </div>
 
       <div className="flex gap-3">
         <button
+<<<<<<< HEAD
           className="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg disabled:opacity-50"
           onClick={() => setShowPopup(false)}
           disabled={isAddingToCart}
+=======
+          className="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg"
+          onClick={() => setShowPopup(false)}
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
         >
           Cancel
         </button>
 
         <div className="flex-1">
           <button
+<<<<<<< HEAD
             disabled={!selectedFormat || isAddingToCart}
             className={`w-full py-2 rounded-lg font-semibold ${
               selectedFormat && !isAddingToCart
+=======
+            disabled={!selectedFormat}
+            className={`w-full py-2 rounded-lg font-semibold ${
+              selectedFormat
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
                 ? "bg-red-600 text-white"
                 : "bg-red-300 text-gray-100 cursor-not-allowed"
             }`}
@@ -344,13 +444,18 @@ const isInCart = cartItems.some(item => item.id === product?.id);
               setShowPopup(false);
             }}
           >
+<<<<<<< HEAD
             {isAddingToCart ? 'Adding...' : 'Add to Cart'}
+=======
+            Add to Cart
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
           </button>
         </div>
 
         {/* Removed 'Add Both Formats' per request */}
       </div>
     </div>
+<<<<<<< HEAD
     </div>
   )}
 
@@ -367,6 +472,10 @@ const isInCart = cartItems.some(item => item.id === product?.id);
           </div>
         </div>
       )}
+=======
+  </div>
+)}
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
 
     </div>
   );
@@ -374,4 +483,8 @@ const isInCart = cartItems.some(item => item.id === product?.id);
 
 
 
+<<<<<<< HEAD
 export default ProductDetail;
+=======
+export default ProductDetail;
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df

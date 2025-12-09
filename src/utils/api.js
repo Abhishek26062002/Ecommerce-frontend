@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+import Orders from "../pages/Orders";
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://ecommerce-six-omega.vercel.app';
 
@@ -32,6 +36,7 @@ export const api = {
     return response.json();
   },
 
+<<<<<<< HEAD
   async fetchLatestProducts() {
     const response = await fetch(`${API_BASE_URL}/products/latest_products`);
     if (!response.ok) throw new Error('Failed to fetch latest products');
@@ -45,6 +50,8 @@ export const api = {
     console.log(data);
     return data;
   },
+=======
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
 
   async generateR2Urls(productId, expiry = 3600) {
     const response = await fetch(`${API_BASE_URL}/products/generate-r2-url/${productId}?expiry=${expiry}`);
@@ -213,10 +220,13 @@ console.log({user_id : userId, items});
     return data;
   },
 
+<<<<<<< HEAD
   async fetchMachinery() {
     const response = await fetch(`${API_BASE_URL}/machines/get_all_machines`);
     if (!response.ok) throw new Error('Failed to fetch machinery');
     return response.json();
   },
 
+=======
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
 };

@@ -12,8 +12,11 @@ const Account = () => {
   const [activeTab, setActiveTab] = useState('profile');
   const [orders, setOrders] = useState([]);
   const [downloads, setDownloads] = useState([]);
+<<<<<<< HEAD
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [loadingDownloads, setLoadingDownloads] = useState(false);
+=======
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -30,7 +33,10 @@ const Account = () => {
 
   const fetchOrders = async () => {
     try {
+<<<<<<< HEAD
       setLoadingOrders(true);
+=======
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
       const userId = localStorage.getItem('userId');
       if (!userId) {
         console.error('No userId found');
@@ -44,14 +50,20 @@ const Account = () => {
     } catch (error) {
       console.error('Error fetching orders:', error);
       setOrders(mockOrders);
+<<<<<<< HEAD
     } finally {
       setLoadingOrders(false);
+=======
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
     }
   };
 
   const fetchDownloads = async () => {
     try {
+<<<<<<< HEAD
       setLoadingDownloads(true);
+=======
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
       const userId = localStorage.getItem('userId');
       if (!userId) {
         console.error('No userId found');
@@ -84,8 +96,11 @@ const Account = () => {
     } catch (error) {
       console.error('Error fetching downloads:', error);
       setDownloads(mockDownloads);
+<<<<<<< HEAD
     } finally {
       setLoadingDownloads(false);
+=======
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
     }
   };
 
@@ -123,8 +138,13 @@ const Account = () => {
 
             <div className="mt-6">
               {activeTab === 'profile' && <ProfileTab user={user} />}
+<<<<<<< HEAD
               {activeTab === 'orders' && <OrdersTab orders={orders} loading={loadingOrders} />}
               {activeTab === 'downloads' && <DownloadsTab downloads={downloads} loading={loadingDownloads} />}
+=======
+              {activeTab === 'orders' && <OrdersTab orders={orders} />}
+              {activeTab === 'downloads' && <DownloadsTab downloads={downloads} />}
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
             </div>
           </div>
         </div>
@@ -133,6 +153,7 @@ const Account = () => {
   );
 };
 
+<<<<<<< HEAD
 // Skeleton Loading Components
 const OrderSkeleton = () => (
   <div className="border border-gray-200 rounded-lg p-4 animate-pulse">
@@ -179,6 +200,8 @@ const DownloadSkeleton = () => (
   </div>
 );
 
+=======
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
 const ProfileTab = ({ user }) => {
   const [editing, setEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -252,6 +275,7 @@ const ProfileTab = ({ user }) => {
   );
 };
 
+<<<<<<< HEAD
 const OrdersTab = ({ orders, loading }) => {
   if (loading) {
     return (
@@ -263,6 +287,9 @@ const OrdersTab = ({ orders, loading }) => {
     );
   }
 
+=======
+const OrdersTab = ({ orders }) => {
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
   if (orders.length === 0) {
     return (
       <div className="text-center py-12">
@@ -311,7 +338,11 @@ const OrdersTab = ({ orders, loading }) => {
   );
 };
 
+<<<<<<< HEAD
 const DownloadsTab = ({ downloads, loading }) => {
+=======
+const DownloadsTab = ({ downloads }) => {
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
   const [downloading, setDownloading] = useState(null);
 
   const handleDownload = async (download) => {
@@ -359,6 +390,7 @@ const DownloadsTab = ({ downloads, loading }) => {
     }
   };
 
+<<<<<<< HEAD
   if (loading) {
     return (
       <div className="space-y-4">
@@ -369,6 +401,8 @@ const DownloadsTab = ({ downloads, loading }) => {
     );
   }
 
+=======
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
   if (downloads.length === 0) {
     return (
       <div className="text-center py-12">
@@ -381,6 +415,7 @@ const DownloadsTab = ({ downloads, loading }) => {
   return (
     <div className="space-y-4">
       {downloads.map((download) => (
+<<<<<<< HEAD
         <div key={download.id} className="border border-gray-200 rounded-lg p-4">
           <div className="flex flex-col md:flex-row gap-4">
             {/* Product Image */}
@@ -424,6 +459,48 @@ const DownloadsTab = ({ downloads, loading }) => {
               <span>{downloading === download.id ? 'Downloading...' : 'Download'}</span>
             </button>
           </div>
+=======
+        <div key={download.id} className="border border-gray-200 rounded-lg p-4 flex items-start gap-4">
+          {/* Product Image */}
+          {download.image && (
+            <img
+              src={download.image}
+              alt={download.name}
+              className="w-24 h-24 object-cover rounded-lg shrink-0"
+            />
+          )}
+          
+          {/* Product Details */}
+          <div className="flex-1">
+            <p className="font-semibold text-gray-800">{download.name}</p>
+            {download.category && (
+              <p className="text-sm text-gray-600">Category: {download.category}</p>
+            )}
+            <p className="text-sm text-gray-600">
+              Purchased on {formatDate(download.purchaseDate)}
+            </p>
+            <div className="flex gap-2 mt-2">
+              {download.formats.map((format) => (
+                <span key={format} className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded">
+                  {format}
+                </span>
+              ))}
+            </div>
+            {download.price && (
+              <p className="text-sm font-medium text-red-600 mt-2">{formatPrice(download.price)}</p>
+            )}
+          </div>
+
+          {/* Download Button */}
+          <button
+            onClick={() => handleDownload(download)}
+            disabled={downloading === download.id}
+            className="flex items-center space-x-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <Download className="h-4 w-4" />
+            <span>{downloading === download.id ? 'Downloading...' : 'Download'}</span>
+          </button>
+>>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
         </div>
       ))}
     </div>
