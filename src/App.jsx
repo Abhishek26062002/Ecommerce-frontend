@@ -1,9 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import MachineryBasketSidebar from './components/MachineryBasketSidebar';
 import Home from './pages/Home';
 import Products from './pages/Products';
 import ProductDetail from './pages/ProductDetail';
+import Machinery from './pages/Machinery';
 import Cart from './pages/Cart';
 import Wishlist from './pages/Wishlist';
 import Login from './pages/Login';
@@ -13,11 +15,13 @@ import Contact from './pages/Contact';
 import FAQ from './pages/FAQ';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
+import RefundPolicy from './pages/RefundPolicy';
 import PaymentSuccess from './pages/PaymentSuccess';
 import PaymentFailed from './pages/PaymentFailed';
 import { useEffect, useState } from 'react';
 import GoogleCallback from './pages/GoogleCallback';
 import Orders from './pages/Orders';
+import Machines from './pages/Machines';
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);
@@ -46,7 +50,9 @@ function App() {
             <Route path="/callback" element={<GoogleCallback />} />
             <Route path="/products" element={<Products />} />
             <Route path="/product/:id" element={<ProductDetail />} />
-            <Route path="/cart" element={<Cart />} />
+            <Route path="/machinery" element={<Machinery />} />
+            <Route path="/machines" element={<Machines />} />
+            <Route path="/cart" element={<Cart openLogin={openLogin}/>} />
             <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/account" element={<Account />} />
             <Route path="/orders" element={<Orders openLogin={openLogin} />} />
@@ -55,11 +61,13 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/faq" element={<FAQ />} />
-            <Route path="/terms" element={<Terms />} />
-            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms-and-conditions" element={<Terms />} />
+            <Route path="/privacy-policy" element={<Privacy />} />
+            <Route path="/refund-policy" element={<RefundPolicy />} />
           </Routes>
         </main>
         <Footer />
+        <MachineryBasketSidebar />
         {showLogin && <Login onClose={() => setShowLogin(false)} />}
 
         {showIntro && (

@@ -1,4 +1,3 @@
-import Orders from "../pages/Orders";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://ecommerce-six-omega.vercel.app';
 
@@ -33,6 +32,19 @@ export const api = {
     return response.json();
   },
 
+  async fetchLatestProducts() {
+    const response = await fetch(`${API_BASE_URL}/products/latest_products`);
+    if (!response.ok) throw new Error('Failed to fetch latest products');
+    return response.json();
+  },
+
+  async fetchProductsInfiniteScroll(limit = 50, offset = 0) {
+    const response = await fetch(`${API_BASE_URL}/products/get_all_products_infinite_scroll?limit=${limit}&offset=${offset}`);
+    if (!response.ok) throw new Error('Failed to fetch products');
+    const data = await response.json();
+    console.log(data);
+    return data;
+  },
 
   async generateR2Urls(productId, expiry = 3600) {
     const response = await fetch(`${API_BASE_URL}/products/generate-r2-url/${productId}?expiry=${expiry}`);
@@ -105,7 +117,7 @@ console.log({user_id : userId, items});
         user_id: userId,
         items: items.map(item => ({
           product_id: item.id,
-          machine_type: item.selectedFormat,
+          machine_type: item.selected_format,
           qty: item.quantity,
           unit_price: item.discount_price ?? item.price
         })),
@@ -186,9 +198,9 @@ console.log({user_id : userId, items});
     return data;
   },
 
-  async getProductDownloadUrl(paymentId, fileType) {
-    console.log('Getting download URL for payment:', paymentId, 'file type:', fileType);
-    const response = await fetch(`${API_BASE_URL}/products/product_download_urls/${paymentId}/${fileType}`);
+  async getProductDownloadUrl(paymentId, productId, fileType) {
+    console.log('Getting download URL for payment:', paymentId, 'product ID:', productId, 'file type:', fileType);
+    const response = await fetch(`${API_BASE_URL}/products/product_download_urls/${paymentId}/${productId}/${fileType}`);
     
     if (!response.ok) {
       const error = await response.json();
@@ -198,6 +210,20 @@ console.log({user_id : userId, items});
     const data = await response.json();
     console.log('Download URL response:', data);
     
+    return data;
+  },
+
+  async fetchMachinery() {
+    const response = await fetch(`${API_BASE_URL}/machines/get_all_machines`);
+    if (!response.ok) throw new Error('Failed to fetch machinery');
+    return response.json();
+  },
+
+   async fetchEmbroideryMachines() {
+    const response = await fetch(`${API_BASE_URL}/embriodery_machines/get_machines`);
+    if (!response.ok) throw new Error('Failed to fetch embroidery machines');
+    const data = await response.json();
+    console.log('Fetching embroidery machines data', data);
     return data;
   },
 

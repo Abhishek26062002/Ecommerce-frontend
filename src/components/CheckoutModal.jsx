@@ -40,7 +40,7 @@ const CheckoutModal = ({ isOpen, onClose, items, total, onPaymentSuccess }) => {
 
     setLoading(true);
     try {
-      const userId = localStorage.getItem('userId');
+      const userId = localStorage.getItem('osa-userId');
       if (!userId) {
         showToast('Please login to proceed', 'error');
         setLoading(false);
@@ -73,7 +73,7 @@ const CheckoutModal = ({ isOpen, onClose, items, total, onPaymentSuccess }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black/30 bg-opacity-50 z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b sticky top-0 bg-white">
@@ -97,7 +97,7 @@ const CheckoutModal = ({ isOpen, onClose, items, total, onPaymentSuccess }) => {
                 <div key={idx} className="flex justify-between text-sm text-gray-600">
                   <span>
                     {item.name} x {item.quantity}
-                    {item.selectedFormat && <span className="ml-1">({item.selectedFormat})</span>}
+                    {item.selected_format && <span className="ml-1">({item.selected_format})</span>}
                   </span>
                   <span className="font-medium">
                     {formatPrice((item.discount_price ?? item.price) * item.quantity)}
@@ -169,7 +169,7 @@ const CheckoutModal = ({ isOpen, onClose, items, total, onPaymentSuccess }) => {
           <button
             onClick={handleCheckout}
             disabled={loading}
-            className="w-full bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 font-semibold"
+            className="w-full cursor-pointer bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 font-semibold"
           >
             {loading && <Loader className="h-5 w-5 animate-spin" />}
             {loading ? 'Processing...' : `Pay ${formatPrice(total)}`}
@@ -178,7 +178,7 @@ const CheckoutModal = ({ isOpen, onClose, items, total, onPaymentSuccess }) => {
           <button
             onClick={onClose}
             disabled={loading}
-            className="w-full border border-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full cursor-pointer border border-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Cancel
           </button>

@@ -25,7 +25,7 @@ const GoogleCallback = () => {
 
       if (token && email) {
         if (id) {
-          localStorage.setItem("userId", id);
+          localStorage.setItem("osa-userId", id);
         }
 
         login({ name, email }, token);
@@ -59,12 +59,12 @@ const GoogleCallback = () => {
                   price: it.price ?? it.unit_price,
                   discount_price: it.unit_price ?? it.price,
                   machine_type: it.machine_type,
-                  selectedFormat: it.selected_format,
+                  selected_format: it.selected_format,
                 };
 
                 // add once then set correct quantity
                 addToCart(productObj);
-                // updateQuantity expects (productId, quantity, selectedFormat)
+                // updateQuantity expects (productId, quantity, selected_format)
                 updateQuantity(it.product_id, it.quantity, it.selected_format);
               }
             }

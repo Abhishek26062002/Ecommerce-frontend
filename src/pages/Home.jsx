@@ -4,6 +4,20 @@ import { ArrowRight, Sparkles, TrendingUp } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import { api } from '../utils/api';
 
+const ProductCardSkeleton = () => (
+  <div className="bg-white rounded-lg overflow-hidden shadow-md animate-pulse">
+    <div className="w-full h-48 sm:h-56 bg-gray-300 rounded-t-lg"></div>
+    <div className="p-3 sm:p-4 space-y-3">
+      <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+      <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+      <div className="space-y-2 flex gap-2">
+        <div className="h-4 bg-gray-300 rounded w-12"></div>
+        <div className="h-4 bg-gray-300 rounded w-12"></div>
+      </div>
+    </div>
+  </div>
+);
+
 const Home = () => {
   const [newArrivals, setNewArrivals] = useState([]);
   const [topSellers, setTopSellers] = useState([]);
@@ -24,15 +38,15 @@ const Home = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await productsAPI.getAll();
-      const products = response.data || mockProducts;
+      const latestProducts = await api.fetchLatestProducts();
+      setNewArrivals(Array.isArray(latestProducts) ? latestProducts.slice(0, 4) : []);
 
-      setNewArrivals(products.slice(0, 4));
-      setTopSellers(products.slice(4, 8));
+      console.log('Latest Products:', latestProducts);
+      setTopSellers(Array.isArray(latestProducts) ? latestProducts.slice(0, 4) : []);
     } catch (error) {
       console.error('Error fetching products:', error);
-      setNewArrivals(mockProducts.slice(0, 4));
-      setTopSellers(mockProducts.slice(4, 8));
+      setNewArrivals([]);
+      setTopSellers([]);
     } finally {
       setLoading(false);
     }
@@ -77,16 +91,16 @@ const Home = () => {
           }}></div>
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
+        <div className="relative max-w-7xl flex gap-12 mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
 <div className="max-w-4xl">
-  <h1 className="text-5xl md:text-7xl mb-6 leading-tight">
-    Exquisite Digital
+  <h1 className="text-5xl md:text-7xl mb-2 leading-tight">
+    {/* Exquisite Digital */}
     <span className="block text-transparent bg-clip-text bg-linear-to-r from-amber-200 via-amber-300 to-amber-400 min-h-fit leading-normal">
-      Embroidery Designs
+      OSA Embroidery 
     </span>
   </h1>
   
-  <p className="text-xl md:text-2xl mb-4 text-red-100 font-light tracking-wide">
+  <p className="text-2xl md:text-4xl mb-4 text-red-100 font-light tracking-wide">
     Power • Precision • Performance
   </p>
   
@@ -104,6 +118,9 @@ const Home = () => {
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
     </svg>
   </a>
+</div>
+<div className='hidden lg:block max-h-[250px] z-10'>
+  <img src="https://res.cloudinary.com/dobuwrfn8/image/upload/v1765276114/OSAMACHINE_r72dyh.png" alt="" />
 </div>
         </div>
 
@@ -178,9 +195,9 @@ const Home = () => {
           </div>
 
           {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="bg-gray-100 rounded-2xl h-96 animate-pulse" />
+                <ProductCardSkeleton key={i} />
               ))}
             </div>
           ) : (
@@ -216,9 +233,9 @@ const Home = () => {
           </div>
 
           {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="bg-gray-100 rounded-2xl h-96 animate-pulse" />
+                <ProductCardSkeleton key={i} />
               ))}
             </div>
           ) : (
@@ -232,7 +249,7 @@ const Home = () => {
       </section>
 
       {/* Add custom animations to your global CSS */}
-      <style jsx>{`
+      <style>{`
         @keyframes float-slow {
           0%, 100% { transform: translateY(0) rotate(0deg); }
           50% { transform: translateY(-15px) rotate(3deg); }
@@ -263,97 +280,5 @@ const Home = () => {
     </div>
   );
 };
-
-const mockProducts = [
-  { 
-    id: 1, 
-    name: 'Floral Blouse Design', 
-    category: 'Blouse Designs', 
-    price: 299, 
-    images_urls: ['https://res.cloudinary.com/ddvhysyk4/image/upload/v1761849278/Screenshot_2025-10-31_000109_md0wnt.png'], 
-    formats: ['DST', 'JEF'] 
-  },
-  { 
-    id: 2, 
-    name: 'Traditional Saree Border', 
-    category: 'Saree Borders', 
-    price: 399, 
-    images_urls: ['https://res.cloudinary.com/ddvhysyk4/image/upload/v1761849278/Screenshot_2025-10-30_235433_grlxrx.png'], 
-    formats: ['DST', 'JEF'] 
-  },
-  { 
-    id: 3, 
-    name: 'Modern Kurthi Pattern', 
-    category: 'Kurthi Designs', 
-    price: 349, 
-    images_urls: ['https://res.cloudinary.com/ddvhysyk4/image/upload/v1761849279/Screenshot_2025-10-31_000130_sjl1cq.png'], 
-    formats: ['DST', 'JEF'] 
-  },
-  { 
-    id: 4, 
-    name: 'Kids Cartoon Design', 
-    category: 'Kids Designs', 
-    price: 249, 
-    images_urls: ['https://res.cloudinary.com/ddvhysyk4/image/upload/v1761849279/Screenshot_2025-10-30_235828_lk01hu.png'], 
-    formats: ['DST', 'JEF'] 
-  },
-  { 
-    id: 5, 
-    name: 'Company Logo Design', 
-    category: 'Logos', 
-    price: 499, 
-    images_urls: ['https://res.cloudinary.com/ddvhysyk4/image/upload/v1761849280/Screenshot_2025-10-30_235629_a4uzwl.png'], 
-    formats: ['DST', 'JEF'] 
-  },
-  
-  { 
-    id: 25, 
-    name: 'Back Neck Design', 
-    category: 'Blouse Designs', 
-    price: 339, 
-    images_urls: ['https://res.cloudinary.com/dktx1ebxg/image/upload/v1761849876/Screenshot_2025-10-31_000658_mgeryn.png'], 
-    formats: ['DST', 'JEF'] 
-  },
-  { 
-    id: 26, 
-    name: 'Traditional Border', 
-    category: 'Saree Borders', 
-    price: 399, 
-    images_urls: ['https://res.cloudinary.com/dktx1ebxg/image/upload/v1761849876/Screenshot_2025-10-31_001024_juu14f.png'], 
-    formats: ['DST', 'JEF'] 
-  },
-  { 
-    id: 27, 
-    name: 'Modern Kurthi', 
-    category: 'Kurthi Designs', 
-    price: 369, 
-    images_urls: ['https://res.cloudinary.com/dktx1ebxg/image/upload/v1761849876/Screenshot_2025-10-31_001105_sbkcfx.png'], 
-    formats: ['DST', 'JEF'] 
-  },
-  { 
-    id: 28, 
-    name: 'Educational Kids Design', 
-    category: 'Kids Designs', 
-    price: 259, 
-    images_urls: ['https://res.cloudinary.com/dktx1ebxg/image/upload/v1761849876/Screenshot_2025-10-31_001038_f9k9of.png'], 
-    formats: ['DST', 'JEF'] 
-  },
-  { 
-    id: 29, 
-    name: 'Professional Logo', 
-    category: 'Logos', 
-    price: 519, 
-    images_urls: ['https://res.cloudinary.com/dktx1ebxg/image/upload/v1761849876/Screenshot_2025-10-31_000912_dyw8tc.png'], 
-    formats: ['DST', 'JEF'] 
-  },
-  { 
-    id: 30, 
-    name: 'Sequins Special Design', 
-    category: 'Beads & Sequins', 
-    price: 429, 
-    images_urls: ['https://res.cloudinary.com/ddvhysyk4/image/upload/v1761849278/Screenshot_2025-10-31_000109_md0wnt.png'], 
-    formats: ['DST', 'JEF'] 
-  }
-];
 
 export default Home;

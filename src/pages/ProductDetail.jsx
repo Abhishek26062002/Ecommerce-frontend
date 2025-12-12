@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ShoppingCart, Heart, Download, ArrowLeft } from 'lucide-react';
 import ProductGallery from '../components/ProductGallery';
 import useCartStore from '../store/useCartStore';
@@ -12,13 +12,16 @@ const ProductDetail = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+
+  const navigate = useNavigate();
 
   const addToCart = useCartStore(state => state.addItem);
   const addToWishlist = useWishlistStore(state => state.addItem);
   const removeFromWishlist = useWishlistStore(state => state.removeItem);
   const isInWishlist = useWishlistStore(state => state.isInWishlist(id));
   const [showPopup, setShowPopup] = useState(false);
-const [selectedFormat, setSelectedFormat] = useState("");
+const [selected_format, setselected_format] = useState("");
 const cartItems = useCartStore(state => state.items);
 const isInCart = cartItems.some(item => item.id === product?.id);
   const isAuthenticated = useAuthStore(state => state.isAuthenticated);
@@ -41,6 +44,9 @@ const isInCart = cartItems.some(item => item.id === product?.id);
   const fetchProduct = async () => {
     try {
       const data = await api.fetchProductById(id);
+      console.log('Product data:', data);
+      console.log('Machine type:', data?.machine_type);
+      console.log('Is array?', Array.isArray(data?.machine_type));
       setProduct(data || []);
     } catch (error) {
       console.error('Error fetching product:', error);
@@ -52,21 +58,36 @@ const isInCart = cartItems.some(item => item.id === product?.id);
   const handleAddToCart = () => {
     // For guest users, fallback to existing add-to-cart behavior
     if (!isAuthenticated) {
-      addToCart(product);
-      showToast('Added to cart!', 'success');
+      setIsAddingToCart(true);
+      setTimeout(() => {
+        const productObj = {
+                id: product.id,
+                name: product.name,
+                price: product.price ?? product.unit_price,
+                discount_price: product.discount_price,
+                machine_type: product.machine_type,
+                selected_format: selected_format || null,
+                image: product.image || (product.images_urls?.[0]) || null,
+                images_urls: product.images_urls || [],
+              };
+        addToCart(productObj);
+        showToast('Added to cart!', 'success');
+        setIsAddingToCart(false);
+      }, 800);
       return;
     }
 
     // If user is authenticated, send single item to backend
     (async () => {
+      setIsAddingToCart(true);
       try {
-        const userId = localStorage.getItem('userId');
+        const userId = localStorage.getItem('osa-userId');
         if (!userId) throw new Error('Missing user id');
 
         const payloadItem = {
           product_id: product.id,
           name: product.name,
-          machine_type: selectedFormat || product.machine_type || null,
+          selected_format: selected_format || null,
           unit_price: parseFloat(product.discount_price ?? product.price ?? 0),
           quantity: 1,
         };
@@ -91,7 +112,7 @@ const isInCart = cartItems.some(item => item.id === product?.id);
                 price: it.price ?? it.unit_price,
                 discount_price: it.unit_price ?? it.price,
                 machine_type: it.machine_type,
-                selectedFormat: it.selected_format,
+                selected_format: selected_format || null,
                 image: it.image || (it.images_urls?.[0]) || null,
                 images_urls: it.images_urls || [],
                 cartItemId: it.id,
@@ -108,6 +129,8 @@ const isInCart = cartItems.some(item => item.id === product?.id);
       } catch (err) {
         console.error('Error adding item to server cart:', err);
         showToast('Failed to add to cart', 'error');
+      } finally {
+        setIsAddingToCart(false);
       }
     })();
   };
@@ -203,25 +226,13 @@ const isInCart = cartItems.some(item => item.id === product?.id);
             {product?.machine_type && (
               <div className="mb-6">
                 <h3 className="font-semibold text-gray-800 mb-2">Available Formats</h3>
+                {console.log('Rendering machine_type:', product.machine_type, 'Is array:', Array.isArray(product.machine_type))}
                 <div className="flex flex-wrap gap-2">
-                  {product.machine_type && (
-  <div>
-    {product.machine_type === "Both" ? (
-      <>
-        <span className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg font-medium">
-          DST
-        </span>
-        <span className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg font-medium">
-          JEF
-        </span>
-      </>
-    ) : (
-      <span className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg font-medium">
-        {product.machine_type}
-      </span>
-    )}
-  </div>
-)}
+                  {product.machine_type.map((format) => (
+                    <span key={format} className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg font-medium uppercase">
+                      {format}
+                    </span>
+                  ))}
                 </div>
               </div>
             )}
@@ -242,12 +253,12 @@ const isInCart = cartItems.some(item => item.id === product?.id);
               <button
   onClick={() => {
     if (isInCart) {
-      window.location.href = "/cart";
+      navigate("/cart");
       return;
     }
     setShowPopup(true);
   }}
-  className="flex-1 bg-red-600 text-white py-3 px-6 rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center space-x-2"
+  className={`flex-1  cursor-pointer transition-colors flex items-center justify-center space-x-2 ${isInCart ? 'bg-white text-red-600 border-2 rounded-2xl border-red-600' : ' bg-red-600 text-white py-3 px-6 rounded-lg hover:bg-red-700'}`}
 >
   <ShoppingCart className="h-5 w-5" />
   <span className="font-semibold">{isInCart ? "View Cart" : "Add to Cart"}</span>
@@ -256,7 +267,7 @@ const isInCart = cartItems.some(item => item.id === product?.id);
 
               <button
                 onClick={handleToggleWishlist}
-                className={`px-6 py-3 rounded-lg border-2 transition-colors ${
+                className={`px-6 py-3 cursor-pointer rounded-lg border-2 transition-colors ${
                   isInWishlist
                     ? 'border-red-600 bg-red-50 text-red-600'
                     : 'border-gray-300 hover:border-red-600 hover:bg-red-50'
@@ -287,58 +298,36 @@ const isInCart = cartItems.some(item => item.id === product?.id);
       <h2 className="text-xl font-bold mb-4 text-gray-800">Select Machine Format</h2>
 
       <div className="flex flex-wrap gap-2 mb-4">
-        {product.machine_type === "Both" ? (
-          <>
-            <button
-              className={`px-4 py-2 border rounded-lg ${
-                selectedFormat === "DST"
-                  ? "bg-red-600 text-white"
-                  : "bg-gray-100 text-gray-700"
-              }`}
-              onClick={() => setSelectedFormat("DST")}
-            >
-              DST
-            </button>
-
-            <button
-              className={`px-4 py-2 border rounded-lg ${
-                selectedFormat === "JEF"
-                  ? "bg-red-600 text-white"
-                  : "bg-gray-100 text-gray-700"
-              }`}
-              onClick={() => setSelectedFormat("JEF")}
-            >
-              JEF
-            </button>
-          </>
-        ) : (
-            <button
-              className={`px-4 py-2 border rounded-lg ${
-                selectedFormat === product.machine_type
-                  ? "bg-red-600 text-white"
-                  : "bg-gray-100 text-gray-700"
-              }`}
-              onClick={() => setSelectedFormat(product.machine_type)}
-            >
-              {product.machine_type}
-            </button>
-        )}
+        {product.machine_type.map((format) => (
+          <button
+            key={format}
+            className={`px-4 py-2 border rounded-lg cursor-pointer ${
+              selected_format === format
+                ? "bg-red-600 text-white"
+                : "bg-gray-100 text-gray-700"
+            }`}
+            onClick={() => setselected_format(format)}
+          >
+            {format.toUpperCase()}
+          </button>
+        ))}
       </div>
 
       <div className="flex gap-3">
         <button
-          className="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg"
+          className="flex-1 bg-gray-200  cursor-pointer text-gray-700 py-2 rounded-lg disabled:opacity-50"
           onClick={() => setShowPopup(false)}
+          disabled={isAddingToCart}
         >
           Cancel
         </button>
 
         <div className="flex-1">
           <button
-            disabled={!selectedFormat}
+            disabled={!selected_format || isAddingToCart}
             className={`w-full py-2 rounded-lg font-semibold ${
-              selectedFormat
-                ? "bg-red-600 text-white"
+              selected_format && !isAddingToCart
+                ? "bg-red-600 text-white cursor-pointer"
                 : "bg-red-300 text-gray-100 cursor-not-allowed"
             }`}
             onClick={() => {
@@ -346,15 +335,29 @@ const isInCart = cartItems.some(item => item.id === product?.id);
               setShowPopup(false);
             }}
           >
-            Add to Cart
+            {isAddingToCart ? 'Adding...' : 'Add to Cart'}
           </button>
         </div>
 
         {/* Removed 'Add Both Formats' per request */}
       </div>
     </div>
-  </div>
-)}
+    </div>
+  )}
+
+      {isAddingToCart && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 animate-in fade-in duration-200">
+          <div className="flex flex-col items-center">
+            <div className="relative w-16 h-16">
+              <svg className="animate-spin h-16 w-16 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </div>
+            <p className="mt-4 text-white font-semibold">Adding to cart...</p>
+          </div>
+        </div>
+      )}
 
     </div>
   );

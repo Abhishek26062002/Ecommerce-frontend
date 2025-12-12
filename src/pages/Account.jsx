@@ -12,6 +12,8 @@ const Account = () => {
   const [activeTab, setActiveTab] = useState('profile');
   const [orders, setOrders] = useState([]);
   const [downloads, setDownloads] = useState([]);
+  const [loadingOrders, setLoadingOrders] = useState(false);
+  const [loadingDownloads, setLoadingDownloads] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -28,7 +30,8 @@ const Account = () => {
 
   const fetchOrders = async () => {
     try {
-      const userId = localStorage.getItem('userId');
+      setLoadingOrders(true);
+      const userId = localStorage.getItem('osa-userId');
       if (!userId) {
         console.error('No userId found');
         setOrders(mockOrders);
@@ -41,12 +44,15 @@ const Account = () => {
     } catch (error) {
       console.error('Error fetching orders:', error);
       setOrders(mockOrders);
+    } finally {
+      setLoadingOrders(false);
     }
   };
 
   const fetchDownloads = async () => {
     try {
-      const userId = localStorage.getItem('userId');
+      setLoadingDownloads(true);
+      const userId = localStorage.getItem('osa-userId');
       if (!userId) {
         console.error('No userId found');
         setDownloads(mockDownloads);
@@ -78,6 +84,8 @@ const Account = () => {
     } catch (error) {
       console.error('Error fetching downloads:', error);
       setDownloads(mockDownloads);
+    } finally {
+      setLoadingDownloads(false);
     }
   };
 
@@ -115,8 +123,8 @@ const Account = () => {
 
             <div className="mt-6">
               {activeTab === 'profile' && <ProfileTab user={user} />}
-              {activeTab === 'orders' && <OrdersTab orders={orders} />}
-              {activeTab === 'downloads' && <DownloadsTab downloads={downloads} />}
+              {activeTab === 'orders' && <OrdersTab orders={orders} loading={loadingOrders} />}
+              {activeTab === 'downloads' && <DownloadsTab downloads={downloads} loading={loadingDownloads} />}
             </div>
           </div>
         </div>
@@ -124,6 +132,52 @@ const Account = () => {
     </div>
   );
 };
+
+// Skeleton Loading Components
+const OrderSkeleton = () => (
+  <div className="border border-gray-200 rounded-lg p-4 animate-pulse">
+    <div className="flex items-center justify-between mb-2">
+      <div>
+        <div className="h-4 bg-gray-300 rounded w-24 mb-2"></div>
+        <div className="h-3 bg-gray-200 rounded w-32"></div>
+      </div>
+      <div className="text-right">
+        <div className="h-4 bg-gray-300 rounded w-16 mb-2"></div>
+        <div className="h-6 bg-gray-300 rounded w-20"></div>
+      </div>
+    </div>
+    <div className="h-3 bg-gray-200 rounded w-48"></div>
+  </div>
+);
+
+const DownloadSkeleton = () => (
+  <div className="border border-gray-200 rounded-lg p-4 flex flex-col md:flex-row items-start gap-4 animate-pulse">
+
+    {/* LEFT SECTION → Image + Text (wrapped in flex-row on md) */}
+    <div className="flex flex-row gap-4 flex-1 w-full">
+
+      {/* Image Placeholder */}
+      <div className="w-24 h-24 bg-gray-300 rounded-lg shrink-0"></div>
+
+      {/* Text Block */}
+      <div className="flex-1 space-y-3">
+        <div className="h-4 bg-gray-300 rounded w-40"></div>
+        <div className="h-3 bg-gray-200 rounded w-32"></div>
+        <div className="h-3 bg-gray-200 rounded w-36"></div>
+
+        {/* File Formats */}
+        <div className="flex gap-2 mt-2">
+          <div className="h-6 bg-gray-300 rounded w-14"></div>
+          <div className="h-6 bg-gray-300 rounded w-14"></div>
+        </div>
+      </div>
+    </div>
+
+    {/* BUTTON (BOTTOM ON MOBILE, RIGHT ON DESKTOP) */}
+    <div className="w-full md:w-24 h-10 bg-gray-300 rounded-lg shrink-0"></div>
+
+  </div>
+);
 
 const ProfileTab = ({ user }) => {
   const [editing, setEditing] = useState(false);
@@ -198,7 +252,17 @@ const ProfileTab = ({ user }) => {
   );
 };
 
-const OrdersTab = ({ orders }) => {
+const OrdersTab = ({ orders, loading }) => {
+  if (loading) {
+    return (
+      <div className="space-y-4">
+        {[...Array(3)].map((_, i) => (
+          <OrderSkeleton key={i} />
+        ))}
+      </div>
+    );
+  }
+
   if (orders.length === 0) {
     return (
       <div className="text-center py-12">
@@ -223,7 +287,7 @@ const OrdersTab = ({ orders }) => {
 
   return (
     <div className="space-y-4">
-      {orders.map((order) => (
+      {orders && orders.map((order) => (
         <div key={order.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between mb-2">
             <div>
@@ -247,7 +311,7 @@ const OrdersTab = ({ orders }) => {
   );
 };
 
-const DownloadsTab = ({ downloads }) => {
+const DownloadsTab = ({ downloads, loading }) => {
   const [downloading, setDownloading] = useState(null);
 
   const handleDownload = async (download) => {
@@ -295,6 +359,16 @@ const DownloadsTab = ({ downloads }) => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="space-y-4">
+        {[...Array(3)].map((_, i) => (
+          <DownloadSkeleton key={i} />
+        ))}
+      </div>
+    );
+  }
+
   if (downloads.length === 0) {
     return (
       <div className="text-center py-12">
@@ -307,46 +381,49 @@ const DownloadsTab = ({ downloads }) => {
   return (
     <div className="space-y-4">
       {downloads.map((download) => (
-        <div key={download.id} className="border border-gray-200 rounded-lg p-4 flex items-start gap-4">
-          {/* Product Image */}
-          {download.image && (
-            <img
-              src={download.image}
-              alt={download.name}
-              className="w-24 h-24 object-cover rounded-lg shrink-0"
-            />
-          )}
-          
-          {/* Product Details */}
-          <div className="flex-1">
-            <p className="font-semibold text-gray-800">{download.name}</p>
-            {download.category && (
-              <p className="text-sm text-gray-600">Category: {download.category}</p>
+        <div key={download.id} className="border border-gray-200 rounded-lg p-4">
+          <div className="flex flex-col md:flex-row gap-4">
+            {/* Product Image */}
+            <div className="flex items-center gap-4 flex-1">
+            {download.image && (
+              <img
+                src={download.image}
+                alt={download.name}
+                className="w-24 h-24 object-cover rounded-lg shrink-0"
+              />
             )}
-            <p className="text-sm text-gray-600">
-              Purchased on {formatDate(download.purchaseDate)}
-            </p>
-            <div className="flex gap-2 mt-2">
-              {download.formats.map((format) => (
-                <span key={format} className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded">
-                  {format}
-                </span>
-              ))}
+            
+            {/* Product Details */}
+            <div className="flex-1">
+              <p className="font-semibold text-gray-800">{download.name}</p>
+              {download.category && (
+                <p className="text-sm text-gray-600">Category: {download.category}</p>
+              )}
+              <p className="text-sm text-gray-600">
+                Unlimited downloads
+              </p>
+              <div className="flex gap-2 mt-2">
+                {download.formats.map((format) => (
+                  <span key={format} className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded">
+                    {format}
+                  </span>
+                ))}
+              </div>
+              {download.price && (
+                <p className="text-sm hidden md:block font-medium text-red-600 mt-2">{formatPrice(download.price)}</p>
+              )}
             </div>
-            {download.price && (
-              <p className="text-sm font-medium text-red-600 mt-2">{formatPrice(download.price)}</p>
-            )}
+</div>
+            {/* Download Button */}
+            <button
+              onClick={() => handleDownload(download)}
+              disabled={downloading === download.id}
+              className="flex items-center justify-center space-x-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors shrink-0 disabled:opacity-50 disabled:cursor-not-allowed md:h-fit"
+            >
+              <Download className="h-4 w-4" />
+              <span>{downloading === download.id ? 'Downloading...' : 'Download'}</span>
+            </button>
           </div>
-
-          {/* Download Button */}
-          <button
-            onClick={() => handleDownload(download)}
-            disabled={downloading === download.id}
-            className="flex items-center space-x-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <Download className="h-4 w-4" />
-            <span>{downloading === download.id ? 'Downloading...' : 'Download'}</span>
-          </button>
         </div>
       ))}
     </div>
