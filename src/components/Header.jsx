@@ -48,8 +48,7 @@ const Header = ({ openLogin }) => {
     { to: "/", label: "Home" },
     { to: "/products", label: "Products" },
     { to: "/machinery", label: "Machinery" },
-    { to: "/about", label: "About" },
-    { to: "/contact", label: "Contact" },
+    { to: "/machines", label: "Machines" },
     { to: "/orders", label: "Orders" },
   ];
 
@@ -132,7 +131,7 @@ const Header = ({ openLogin }) => {
             </nav>
 
             {/* Desktop Actions */}
-            <div className="hidden lg:flex items-center space-x-4">
+            <div className="hidden lg:flex items-center space-x-4 lg:space-x-0 xl:space-x-6">
               <form onSubmit={handleSearch} className="relative">
                 <input
                   type="text"

@@ -29,11 +29,7 @@ export const slugify = (text) => {
 export const showToast = (message, type = 'success') => {
   const toast = document.createElement('div');
   toast.className = `fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg z-50 transition-opacity duration-300 ${
-<<<<<<< HEAD
     type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500'
-=======
-    type === 'success' ? 'bg-green-500' : 'bg-red-500'
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
   } text-white`;
   toast.textContent = message;
   document.body.appendChild(toast);
@@ -43,7 +39,6 @@ export const showToast = (message, type = 'success') => {
     setTimeout(() => document.body.removeChild(toast), 300);
   }, 3000);
 };
-<<<<<<< HEAD
 
 export const generateMachineryWhatsAppMessage = (items) => {
   const companyName = 'OSA Embroidery';
@@ -86,5 +81,3 @@ export const generateMachineryWhatsAppMessage = (items) => {
   return message;
 };
 
-=======
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df

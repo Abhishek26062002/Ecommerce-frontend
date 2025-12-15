@@ -1,10 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-<<<<<<< HEAD
 import { Package, Download } from 'lucide-react';
-=======
-import { User, Package, Download, LogOut } from 'lucide-react';
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
 import Tabs from '../components/Tabs';
 import useAuthStore from '../store/useAuthStore';
 import { api } from '../utils/api';
@@ -12,19 +8,12 @@ import { formatDate, formatPrice, showToast } from '../utils/helpers';
 
 const Orders = () => {
   const navigate = useNavigate();
-<<<<<<< HEAD
   const { isAuthenticated } = useAuthStore();
   const [activeTab, setActiveTab] = useState('orders');
   const [orders, setOrders] = useState([]);
   const [downloads, setDownloads] = useState([]);
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [loadingDownloads, setLoadingDownloads] = useState(false);
-=======
-  const { user, isAuthenticated, logout } = useAuthStore();
-  const [activeTab, setActiveTab] = useState('profile');
-  const [orders, setOrders] = useState([]);
-  const [downloads, setDownloads] = useState([]);
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -41,24 +30,16 @@ const Orders = () => {
 
   const fetchOrders = async () => {
     try {
-<<<<<<< HEAD
       setLoadingOrders(true);
-      const userId = localStorage.getItem('userId');
+      const userId = localStorage.getItem('osa-userId');
       if (!userId) {
         console.error('No userId found');
         setOrders([]);
-=======
-      const userId = localStorage.getItem('userId');
-      if (!userId) {
-        console.error('No userId found');
-        setOrders(mockOrders);
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
         return;
       }
 
       const response = await api.getOrderHistory(userId);
       console.log('Order history data:', response);
-<<<<<<< HEAD
       setOrders(response || []);
     } catch (error) {
       console.error('Error fetching orders:', error);
@@ -66,29 +47,16 @@ const Orders = () => {
       showToast('Failed to fetch orders', 'error');
     } finally {
       setLoadingOrders(false);
-=======
-      setOrders(response || mockOrders);
-    } catch (error) {
-      console.error('Error fetching orders:', error);
-      setOrders(mockOrders);
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
     }
   };
 
   const fetchDownloads = async () => {
     try {
-<<<<<<< HEAD
       setLoadingDownloads(true);
-      const userId = localStorage.getItem('userId');
+      const userId = localStorage.getItem('osa-userId');
       if (!userId) {
         console.error('No userId found');
         setDownloads([]);
-=======
-      const userId = localStorage.getItem('userId');
-      if (!userId) {
-        console.error('No userId found');
-        setDownloads(mockDownloads);
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
         return;
       }
 
@@ -98,7 +66,7 @@ const Orders = () => {
       // Transform orders response to downloads format
       // Response structure: [{order_id, product_id, product_name, selected_type, quantity, price, images, category, ...}]
       const formattedDownloads = response.map(item => ({
-        id: item.product_id,
+        id: item.order_item_id,
         name: item.product_name,
         purchaseDate: item.created_at || new Date().toISOString(),
         formats: [item.selected_type],
@@ -113,7 +81,6 @@ const Orders = () => {
       }));
       
       console.log('Formatted downloads:', formattedDownloads);
-<<<<<<< HEAD
       setDownloads(formattedDownloads || []);
     } catch (error) {
       console.error('Error fetching downloads:', error);
@@ -125,23 +92,6 @@ const Orders = () => {
   };
 
   const tabs = [
-=======
-      setDownloads(formattedDownloads || mockDownloads);
-    } catch (error) {
-      console.error('Error fetching downloads:', error);
-      setDownloads(mockDownloads);
-    }
-  };
-
-  const handleLogout = () => {
-    logout();
-    showToast('Logged out successfully', 'success');
-    navigate('/');
-  };
-
-  const tabs = [
-    { id: 'profile', label: 'Profile' },
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
     { id: 'orders', label: 'Order History' },
     { id: 'downloads', label: 'Downloads' },
   ];
@@ -151,34 +101,15 @@ const Orders = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-lg shadow-md">
           <div className="p-6 border-b">
-<<<<<<< HEAD
             <h1 className="text-3xl font-bold text-gray-800">My Orders</h1>
-=======
-            <div className="flex items-center justify-between">
-              <h1 className="text-3xl font-bold text-gray-800">My Account</h1>
-              <button
-                onClick={handleLogout}
-                className="flex items-center space-x-2 text-red-600 hover:text-red-700"
-              >
-                <LogOut className="h-5 w-5" />
-                <span>Logout</span>
-              </button>
-            </div>
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
           </div>
 
           <div className="p-6">
             <Tabs tabs={tabs} activeTab={activeTab} onChange={setActiveTab} />
 
             <div className="mt-6">
-<<<<<<< HEAD
               {activeTab === 'orders' && <OrdersTab orders={orders} loading={loadingOrders} />}
               {activeTab === 'downloads' && <DownloadsTab downloads={downloads} loading={loadingDownloads} />}
-=======
-              {activeTab === 'profile' && <ProfileTab user={user} />}
-              {activeTab === 'orders' && <OrdersTab orders={orders} />}
-              {activeTab === 'downloads' && <DownloadsTab downloads={downloads} />}
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
             </div>
           </div>
         </div>
@@ -187,7 +118,6 @@ const Orders = () => {
   );
 };
 
-<<<<<<< HEAD
 // Skeleton Loading Components
 const OrderSkeleton = () => (
   <div className="border border-gray-200 rounded-lg p-4 animate-pulse">
@@ -246,82 +176,6 @@ const OrdersTab = ({ orders, loading }) => {
     );
   }
 
-=======
-const ProfileTab = ({ user }) => {
-  const [editing, setEditing] = useState(false);
-  const [formData, setFormData] = useState({
-    name: user?.name || '',
-    email: user?.email || '',
-  });
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    showToast('Profile updated successfully', 'success');
-    setEditing(false);
-  };
-
-  return (
-    <div className="max-w-2xl">
-      <div className="flex items-center space-x-4 mb-6">
-        <div className="bg-red-100 p-4 rounded-full">
-          <User className="h-12 w-12 text-red-600" />
-        </div>
-        <div>
-          <h2 className="text-2xl font-bold text-gray-800">{user?.name}</h2>
-          <p className="text-gray-600">{user?.email}</p>
-        </div>
-      </div>
-
-      {editing ? (
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
-            <input
-              type="text"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-            <input
-              type="email"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-            />
-          </div>
-          <div className="flex space-x-4">
-            <button
-              type="submit"
-              className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors"
-            >
-              Save Changes
-            </button>
-            <button
-              type="button"
-              onClick={() => setEditing(false)}
-              className="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition-colors"
-            >
-              Cancel
-            </button>
-          </div>
-        </form>
-      ) : (
-        <button
-          onClick={() => setEditing(true)}
-          className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors"
-        >
-          Edit Profile
-        </button>
-      )}
-    </div>
-  );
-};
-
-const OrdersTab = ({ orders }) => {
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
   if (orders.length === 0) {
     return (
       <div className="text-center py-12">
@@ -370,44 +224,30 @@ const OrdersTab = ({ orders }) => {
   );
 };
 
-<<<<<<< HEAD
 const DownloadsTab = ({ downloads, loading }) => {
-=======
-const DownloadsTab = ({ downloads }) => {
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
   const [downloading, setDownloading] = useState(null);
 
   const handleDownload = async (download) => {
     // Use selected_type (DST/JEF) from the download object
     const fileType = download.formats[0]?.toLowerCase() || 'dst';
     
-<<<<<<< HEAD
     // Use paymentId from the download object
     const paymentId = download.paymentId;
 
-    if (!paymentId) {
-      showToast('Payment ID not found for this download', 'error');
-=======
-    // Use orderId as payment_id (they should match in your system)
-    const paymentId = download.paymentId;
+    const productId = download.productId;
 
     if (!paymentId) {
-      showToast('Order ID not found for this download', 'error');
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
+      showToast('Payment ID not found for this download', 'error');
       return;
     }
 
     setDownloading(download.id);
     
     try {
-<<<<<<< HEAD
       console.log(`Downloading ${fileType} for payment ${paymentId}`);
-=======
-      console.log(`Downloading ${fileType} for order ${paymentId}`);
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
       
       // Call backend to get download URL
-      const response = await api.getProductDownloadUrl(paymentId, fileType);
+      const response = await api.getProductDownloadUrl(paymentId, productId, fileType);
       
       // Get the appropriate URL from response
       const downloadUrl = response[`${fileType}_url`];
@@ -434,7 +274,6 @@ const DownloadsTab = ({ downloads }) => {
     }
   };
 
-<<<<<<< HEAD
   if (loading) {
     return (
       <div className="space-y-4">
@@ -445,8 +284,6 @@ const DownloadsTab = ({ downloads }) => {
     );
   }
 
-=======
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
   if (downloads.length === 0) {
     return (
       <div className="text-center py-12">
@@ -459,7 +296,6 @@ const DownloadsTab = ({ downloads }) => {
   return (
     <div className="space-y-4">
       {downloads.map((download) => (
-<<<<<<< HEAD
         <div key={download.id} className="border border-gray-200 rounded-lg p-4">
           <div className="flex flex-col md:flex-row gap-4">
             {/* Product Image */}
@@ -503,66 +339,10 @@ const DownloadsTab = ({ downloads }) => {
               <span>{downloading === download.id ? 'Downloading...' : 'Download'}</span>
             </button>
           </div>
-=======
-        <div key={download.id} className="border border-gray-200 rounded-lg p-4 flex items-start gap-4">
-          {/* Product Image */}
-          {download.image && (
-            <img
-              src={download.image}
-              alt={download.name}
-              className="w-24 h-24 object-cover rounded-lg shrink-0"
-            />
-          )}
-          
-          {/* Product Details */}
-          <div className="flex-1">
-            <p className="font-semibold text-gray-800">{download.name}</p>
-            {download.category && (
-              <p className="text-sm text-gray-600">Category: {download.category}</p>
-            )}
-            <p className="text-sm text-gray-600">
-              Purchased on {formatDate(download.purchaseDate)}
-            </p>
-            <div className="flex gap-2 mt-2">
-              {download.formats.map((format) => (
-                <span key={format} className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded">
-                  {format}
-                </span>
-              ))}
-            </div>
-            {download.price && (
-              <p className="text-sm font-medium text-red-600 mt-2">{formatPrice(download.price)}</p>
-            )}
-          </div>
-
-          {/* Download Button */}
-          <button
-            onClick={() => handleDownload(download)}
-            disabled={downloading === download.id}
-            className="flex items-center space-x-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <Download className="h-4 w-4" />
-            <span>{downloading === download.id ? 'Downloading...' : 'Download'}</span>
-          </button>
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
         </div>
       ))}
     </div>
   );
 };
 
-<<<<<<< HEAD
-=======
-const mockOrders = [
-  { id: 1001, date: '2025-10-01', total: 899, status: 'Completed', items: ['Floral Design', 'Saree Border'] },
-  { id: 1002, date: '2025-09-15', total: 449, status: 'Completed', items: ['Kurthi Pattern'] },
-];
-
-const mockDownloads = [
-  { id: 1, name: 'Floral Blouse Design', purchaseDate: '2025-10-01', formats: ['DST', 'JEF'] },
-  { id: 2, name: 'Traditional Saree Border', purchaseDate: '2025-10-01', formats: ['DST', 'JEF'] },
-  { id: 3, name: 'Modern Kurthi Pattern', purchaseDate: '2025-09-15', formats: ['DST', 'JEF'] },
-];
-
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
 export default Orders;

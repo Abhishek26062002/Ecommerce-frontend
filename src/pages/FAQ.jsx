@@ -11,15 +11,15 @@ const FAQ = () => {
     },
     {
       question: 'How do I download my purchased designs?',
-      answer: 'After purchase confirmation, you can instantly download your designs from your account dashboard. You also have unlimited redownload access.',
+      answer: 'After purchase confirmation, you can instantly download your designs from your orders>downloads or account>downloads. You also have unlimited redownload access.',
     },
     {
       question: 'Can I use these designs for commercial purposes?',
-      answer: 'Yes, once purchased, you can use the designs for your commercial embroidery projects.',
+      answer: 'NO, the designs are for personal use only and cannot be resold or redistributed in any form. For commercial licenses, please contact us directly.',
     },
     {
       question: 'What payment methods do you accept?',
-      answer: 'We accept payments through UPI, debit/credit cards, and digital wallets via our secure payment gateway.',
+      answer: 'We accept payments through UPI, debit/credit cards, and digital wallets via our secure Razorpay payment gateway.',
     },
     {
       question: 'Do you offer refunds?',

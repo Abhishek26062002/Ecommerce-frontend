@@ -4,10 +4,6 @@ import useWishlistStore from '../store/useWishlistStore';
 import { formatPrice, showToast } from '../utils/helpers';
 
 const ProductCard = ({ product }) => {
-<<<<<<< HEAD
-=======
-  console.log(product)
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
   const addToWishlist = useWishlistStore(state => state.addItem);
   const removeFromWishlist = useWishlistStore(state => state.removeItem);
   const isInWishlist = useWishlistStore(state => state.isInWishlist(product.id));
@@ -72,20 +68,11 @@ const ProductCard = ({ product }) => {
             
           {product.machine_type && (
   <div className="mt-3 flex flex-wrap gap-2">
-    {product.machine_type === "Both" ? (
-      <>
-        <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
-          DST
-        </span>
-        <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
-          JEF
-        </span>
-      </>
-    ) : (
-      <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
-        {product.machine_type}
+    {product.machine_type.map((type) => (
+      <span key={type} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded uppercase">
+        {type}
       </span>
-    )}
+    ))}
   </div>
 )}
 

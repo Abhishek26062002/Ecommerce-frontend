@@ -12,7 +12,7 @@ const MachineryCard = ({ machinery }) => {
 
   return (
     <>
-      <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200">
+      <div className="bg-white rounded-xl border border-gray-200 transition-all duration-300 overflow-hidden">
         {/* Image Container */}
         <div 
           className="relative h-64 bg-gray-200 overflow-hidden cursor-pointer"

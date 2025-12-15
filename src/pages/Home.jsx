@@ -55,12 +55,37 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-neutral-50">
       {/* Hero Section */}
-      <section className="relative bg-linear-to-br from-red-900 via-red-800 to-red-900 text-white overflow-hidden">
+      <section className="relative bg-linear-to-br from-red-900 via-red-800 to-red-900 text-white overflow-visible">
         {/* Decorative Elements */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 right-20 w-96 h-96 bg-amber-400 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-20 left-20 w-80 h-80 bg-amber-300 rounded-full blur-3xl"></div>
-        </div>
+        <div className="absolute inset-0 opacity-10 overflow-hidden">
+  <style>{`
+    @keyframes glowMove {
+      0% {
+        transform: translateX(0);
+        max-width: 22rem;
+      }
+      50% {
+        transform: translateX(120px);
+        max-width: 30rem;
+      }
+      100% {
+        transform: translateX(0);
+        max-width: 22rem;
+      }
+    }
+  `}</style>
+
+  <div
+    className="absolute top-20 right-20 h-96 w-96 bg-amber-400 rounded-full blur-3xl"
+    style={{ animation: "glowMove 10s ease-in-out infinite" }}
+  />
+
+  <div
+    className="absolute bottom-20 left-20 h-80 w-80 bg-amber-300 rounded-full blur-3xl"
+    style={{ animation: "glowMove 14s ease-in-out infinite" }}
+  />
+</div>
+
         
         {/* Golden Flora Animated Overlay */}
         <div className="absolute inset-0 overflow-hidden">
@@ -91,21 +116,21 @@ const Home = () => {
           }}></div>
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
-<div className="max-w-4xl">
-  <h1 className="text-5xl md:text-7xl mb-6 leading-tight">
-    Exquisite Digital
+        <div className="relative max-w-7xl flex justify-between items-center mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
+<div className="max-w-4xl 2xl:mb-8">
+  <h1 className="text-5xl md:text-7xl leading-tight">
+    {/* Exquisite Digital */}
     <span className="block text-transparent bg-clip-text bg-linear-to-r from-amber-200 via-amber-300 to-amber-400 min-h-fit leading-normal">
-      Embroidery Designs
+      OSA Embroidery 
     </span>
   </h1>
   
-  <p className="text-xl md:text-2xl mb-4 text-red-100 font-light tracking-wide">
-    Power • Precision • Performance
+  <p className="text-xl md:text-3xl mb-4 -mt-2 text-red-100 font-light tracking-wide">
+    ⚡Power 🎯 Precision 🚀 Performance
   </p>
   
-  <p className="text-lg mb-10 text-red-100/90 max-w-2xl leading-relaxed">
-    Discover our curated collection of high-quality embroidery designs, 
+  <p className="text-lg mb-10 max-w-md text-red-100/90 xl:max-w-2xl leading-relaxed">
+    Discover our curated collection of high-quality embroidery designs,
     crafted with meticulous attention to detail for all your creative endeavors.
   </p>
   
@@ -118,6 +143,9 @@ const Home = () => {
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
     </svg>
   </a>
+</div>
+<div className='hidden lg:block absolute right-10 -top-18 translate-y-1/3 z-10'>
+  <img className='max-h-[550px]' src="https://res.cloudinary.com/dobuwrfn8/image/upload/v1765630375/osamachine_2_c03ezl.png" alt="OSA Embroidery Machine" />
 </div>
         </div>
 
@@ -208,7 +236,7 @@ const Home = () => {
       </section>
 
       {/* Top Sellers Section */}
-      <section className="py-20 bg-linear-to-b from-neutral-50 to-white">
+      {/* <section className="py-20 bg-linear-to-b from-neutral-50 to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-12">
             <div className="flex items-center space-x-4">
@@ -243,7 +271,7 @@ const Home = () => {
             </div>
           )}
         </div>
-      </section>
+      </section> */}
 
       {/* Add custom animations to your global CSS */}
       <style>{`

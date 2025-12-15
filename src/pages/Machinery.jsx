@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Loader, AlertCircle } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 import MachineryCard from '../components/MachineryCard';
 import { api } from '../utils/api';
 import { showToast } from '../utils/helpers';
@@ -32,10 +32,29 @@ const Machinery = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <Loader className="w-12 h-12 text-red-600 animate-spin mx-auto" />
-          <p className="text-gray-600 font-medium">Loading machinery...</p>
+      <div className="min-h-screen bg-gray-50 p-2 md:py-8">
+        <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <div className="h-10 bg-gray-200 rounded w-1/3 mx-auto mb-4 animate-pulse"></div>
+            <div className="h-5 bg-gray-200 rounded w-2/3 mx-auto animate-pulse"></div>
+          </div>
+          <div className='grid grid-cols-2 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:gap-6'>
+            {Array.from({ length: 8 }).map((_, idx) => (
+              <div key={idx} className="bg-white rounded-xl border border-gray-300 overflow-hidden animate-pulse">
+                <div className="aspect-square bg-gray-200"></div>
+                <div className="p-4 space-y-3">
+                  <div className="h-3 bg-gray-200 rounded w-20"></div>
+                  <div className="space-y-2">
+                    <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                  </div>
+        
+                  <div className="h-3 bg-gray-200 rounded w-24"></div>
+                
+                 
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -70,8 +89,8 @@ const Machinery = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 p-2 md:py-8">
+      <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
@@ -83,39 +102,12 @@ const Machinery = () => {
         </div>
 
         {/* Machinery Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:gap-6">
           {machinery.map((item) => (
             <MachineryCard key={item.id} machinery={item} />
           ))}
         </div>
 
-        {/* Info Section */}
-        <div className="mt-16 bg-white rounded-xl shadow-md p-8 border border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Why Choose Our Machinery?</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="space-y-2">
-              <div className="text-3xl">⚙️</div>
-              <h3 className="font-semibold text-gray-800">High Performance</h3>
-              <p className="text-gray-600 text-sm">
-                Industrial-grade machinery built for precision and durability
-              </p>
-            </div>
-            <div className="space-y-2">
-              <div className="text-3xl">🛠️</div>
-              <h3 className="font-semibold text-gray-800">Expert Support</h3>
-              <p className="text-gray-600 text-sm">
-                Dedicated technical support and maintenance guidance included
-              </p>
-            </div>
-            <div className="space-y-2">
-              <div className="text-3xl">💼</div>
-              <h3 className="font-semibold text-gray-800">Best Pricing</h3>
-              <p className="text-gray-600 text-sm">
-                Competitive rates with flexible payment options available
-              </p>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );

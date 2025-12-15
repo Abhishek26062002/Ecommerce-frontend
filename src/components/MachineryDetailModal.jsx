@@ -84,6 +84,7 @@ const MachineryDetailModal = ({ machinery, isOpen, onClose }) => {
 
                   {/* Quantity & Action - Moved to top */}
                   <div className="space-y-3 p-4 bg-red-50 rounded-lg border border-red-200">
+                    <div className='flex items-center gap-5'>
                     <label className="block text-sm font-semibold text-gray-800">
                       Quantity
                     </label>
@@ -111,6 +112,8 @@ const MachineryDetailModal = ({ machinery, isOpen, onClose }) => {
                       </button>
                     </div>
 
+                    </div>
+
                     <button
                       onClick={handleAddToBasket}
                       className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-lg"
@@ -120,15 +123,13 @@ const MachineryDetailModal = ({ machinery, isOpen, onClose }) => {
                     </button>
                   </div>
 
-                  {/* Description */}
-                  {machinery.description && (
-                    <div className="space-y-2">
-                      <h3 className="font-semibold text-gray-800">Description</h3>
-                      <p className="text-gray-600 leading-relaxed">
-                        {machinery.description}
-                      </p>
-                    </div>
-                  )}
+                  {/* Stock Status */}
+                  <div className="flex items-center gap-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                    <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+                    <span className="text-sm text-blue-900 font-medium">
+                      In Stock {machinery.stock_count && `- ${machinery.stock_count} units available`}
+                    </span>
+                  </div>
 
                   {/* Product Details */}
                   <div className="space-y-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
@@ -143,7 +144,11 @@ const MachineryDetailModal = ({ machinery, isOpen, onClose }) => {
                       {machinery.machine_type && (
                         <div className="flex justify-between">
                           <span className="text-gray-600">Type</span>
-                          <span className="font-medium text-gray-800">{machinery.machine_type}</span>
+                          <span className="font-medium text-gray-800">
+                            {Array.isArray(machinery.machine_type) 
+                              ? machinery.machine_type.map(t => t.toUpperCase()).join(', ')
+                              : machinery.machine_type}
+                          </span>
                         </div>
                       )}
                       {machinery.size && (
@@ -161,13 +166,17 @@ const MachineryDetailModal = ({ machinery, isOpen, onClose }) => {
                     </div>
                   </div>
 
-                  {/* Stock Status */}
-                  <div className="flex items-center gap-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                    <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-                    <span className="text-sm text-blue-900 font-medium">
-                      In Stock {machinery.stock_count && `- ${machinery.stock_count} units available`}
-                    </span>
-                  </div>
+                  {/* Description */}
+                  {machinery.description && (
+                    <div className="space-y-2">
+                      <h3 className="font-semibold text-gray-800">Description</h3>
+                      <p className="text-gray-600 leading-relaxed">
+                        {machinery.description}
+                      </p>
+                    </div>
+                  )}
+
+                  
                 </div>
               </div>
             </div>

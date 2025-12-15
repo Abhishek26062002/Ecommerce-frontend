@@ -21,6 +21,7 @@ import PaymentFailed from './pages/PaymentFailed';
 import { useEffect, useState } from 'react';
 import GoogleCallback from './pages/GoogleCallback';
 import Orders from './pages/Orders';
+import Machines from './pages/Machines';
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);
@@ -50,7 +51,8 @@ function App() {
             <Route path="/products" element={<Products />} />
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/machinery" element={<Machinery />} />
-            <Route path="/cart" element={<Cart />} />
+            <Route path="/machines" element={<Machines />} />
+            <Route path="/cart" element={<Cart openLogin={openLogin}/>} />
             <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/account" element={<Account />} />
             <Route path="/orders" element={<Orders openLogin={openLogin} />} />

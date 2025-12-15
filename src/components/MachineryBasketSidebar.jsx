@@ -1,11 +1,11 @@
-import { X, Plus, Minus, MessageCircle } from 'lucide-react';
+import { X, Plus, Minus, MessageCircle, ShoppingBag } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import useMachineryBasketStore from '../store/useMachineryBasketStore';
 import { generateMachineryWhatsAppMessage, showToast } from '../utils/helpers';
 
 const MachineryBasketSidebar = () => {
   const location = useLocation();
-  const isOnMachineryPage = location.pathname === '/machinery';
+  const isOnMachineryPage = location.pathname === '/machinery' || location.pathname === '/machines';
   
   const {
     items,
@@ -173,12 +173,12 @@ const MachineryBasketSidebar = () => {
       </div>
 
       {/* Floating Basket Button (Bottom Right - Only on Machinery Page) */}
-      {isOnMachineryPage && items.length > 0 && !sidebarOpen && (
+      {isOnMachineryPage && !sidebarOpen && (
         <button
           onClick={toggleSidebar}
-          className="fixed bottom-6 right-6 bg-red-600 hover:bg-red-700 text-white rounded-full p-4 shadow-2xl transition-all z-40 flex items-center gap-2"
+          className="fixed cursor-pointer bottom-6 right-6 bg-red-600 hover:bg-red-700 text-white rounded-full p-4 shadow-2xl transition-all z-40 flex items-center gap-2"
         >
-          <MessageCircle className="w-5 h-5" />
+          <ShoppingBag className="w-5 h-5" />
           <span className="bg-white text-red-600 font-bold rounded-full w-6 h-6 flex items-center justify-center text-sm">
             {items.length}
           </span>

@@ -12,11 +12,8 @@ const Account = () => {
   const [activeTab, setActiveTab] = useState('profile');
   const [orders, setOrders] = useState([]);
   const [downloads, setDownloads] = useState([]);
-<<<<<<< HEAD
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [loadingDownloads, setLoadingDownloads] = useState(false);
-=======
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -33,41 +30,32 @@ const Account = () => {
 
   const fetchOrders = async () => {
     try {
-<<<<<<< HEAD
       setLoadingOrders(true);
-=======
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
-      const userId = localStorage.getItem('userId');
+      const userId = localStorage.getItem('osa-userId');
       if (!userId) {
         console.error('No userId found');
-        setOrders(mockOrders);
+        setOrders([]);
         return;
       }
 
       const response = await api.getOrderHistory(userId);
       console.log('Order history data:', response);
-      setOrders(response || mockOrders);
+      setOrders(response || []);
     } catch (error) {
       console.error('Error fetching orders:', error);
-      setOrders(mockOrders);
-<<<<<<< HEAD
+      setOrders([]);
     } finally {
       setLoadingOrders(false);
-=======
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
     }
   };
 
   const fetchDownloads = async () => {
     try {
-<<<<<<< HEAD
       setLoadingDownloads(true);
-=======
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
-      const userId = localStorage.getItem('userId');
+      const userId = localStorage.getItem('osa-userId');
       if (!userId) {
         console.error('No userId found');
-        setDownloads(mockDownloads);
+        setDownloads([]);
         return;
       }
 
@@ -92,15 +80,12 @@ const Account = () => {
       }));
       
       console.log('Formatted downloads:', formattedDownloads);
-      setDownloads(formattedDownloads || mockDownloads);
+      setDownloads(formattedDownloads || []);
     } catch (error) {
       console.error('Error fetching downloads:', error);
-      setDownloads(mockDownloads);
-<<<<<<< HEAD
+      setDownloads([]);
     } finally {
       setLoadingDownloads(false);
-=======
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
     }
   };
 
@@ -138,13 +123,8 @@ const Account = () => {
 
             <div className="mt-6">
               {activeTab === 'profile' && <ProfileTab user={user} />}
-<<<<<<< HEAD
               {activeTab === 'orders' && <OrdersTab orders={orders} loading={loadingOrders} />}
               {activeTab === 'downloads' && <DownloadsTab downloads={downloads} loading={loadingDownloads} />}
-=======
-              {activeTab === 'orders' && <OrdersTab orders={orders} />}
-              {activeTab === 'downloads' && <DownloadsTab downloads={downloads} />}
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
             </div>
           </div>
         </div>
@@ -153,7 +133,6 @@ const Account = () => {
   );
 };
 
-<<<<<<< HEAD
 // Skeleton Loading Components
 const OrderSkeleton = () => (
   <div className="border border-gray-200 rounded-lg p-4 animate-pulse">
@@ -200,8 +179,6 @@ const DownloadSkeleton = () => (
   </div>
 );
 
-=======
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
 const ProfileTab = ({ user }) => {
   const [editing, setEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -275,7 +252,6 @@ const ProfileTab = ({ user }) => {
   );
 };
 
-<<<<<<< HEAD
 const OrdersTab = ({ orders, loading }) => {
   if (loading) {
     return (
@@ -287,9 +263,6 @@ const OrdersTab = ({ orders, loading }) => {
     );
   }
 
-=======
-const OrdersTab = ({ orders }) => {
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
   if (orders.length === 0) {
     return (
       <div className="text-center py-12">
@@ -314,7 +287,7 @@ const OrdersTab = ({ orders }) => {
 
   return (
     <div className="space-y-4">
-      {orders.map((order) => (
+      {orders && orders.map((order) => (
         <div key={order.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between mb-2">
             <div>
@@ -338,32 +311,30 @@ const OrdersTab = ({ orders }) => {
   );
 };
 
-<<<<<<< HEAD
 const DownloadsTab = ({ downloads, loading }) => {
-=======
-const DownloadsTab = ({ downloads }) => {
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
   const [downloading, setDownloading] = useState(null);
 
   const handleDownload = async (download) => {
     // Use selected_type (DST/JEF) from the download object
     const fileType = download.formats[0]?.toLowerCase() || 'dst';
     
-    // Use orderId as payment_id (they should match in your system)
+    // Use paymentId from the download object
     const paymentId = download.paymentId;
 
+    const productId = download.productId;
+
     if (!paymentId) {
-      showToast('Order ID not found for this download', 'error');
+      showToast('Payment ID not found for this download', 'error');
       return;
     }
 
     setDownloading(download.id);
     
     try {
-      console.log(`Downloading ${fileType} for order ${paymentId}`);
+      console.log(`Downloading ${fileType} for payment ${paymentId}`);
       
       // Call backend to get download URL
-      const response = await api.getProductDownloadUrl(paymentId, fileType);
+      const response = await api.getProductDownloadUrl(paymentId, productId, fileType);
       
       // Get the appropriate URL from response
       const downloadUrl = response[`${fileType}_url`];
@@ -390,7 +361,6 @@ const DownloadsTab = ({ downloads }) => {
     }
   };
 
-<<<<<<< HEAD
   if (loading) {
     return (
       <div className="space-y-4">
@@ -401,8 +371,6 @@ const DownloadsTab = ({ downloads }) => {
     );
   }
 
-=======
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
   if (downloads.length === 0) {
     return (
       <div className="text-center py-12">
@@ -415,7 +383,6 @@ const DownloadsTab = ({ downloads }) => {
   return (
     <div className="space-y-4">
       {downloads.map((download) => (
-<<<<<<< HEAD
         <div key={download.id} className="border border-gray-200 rounded-lg p-4">
           <div className="flex flex-col md:flex-row gap-4">
             {/* Product Image */}
@@ -459,63 +426,10 @@ const DownloadsTab = ({ downloads }) => {
               <span>{downloading === download.id ? 'Downloading...' : 'Download'}</span>
             </button>
           </div>
-=======
-        <div key={download.id} className="border border-gray-200 rounded-lg p-4 flex items-start gap-4">
-          {/* Product Image */}
-          {download.image && (
-            <img
-              src={download.image}
-              alt={download.name}
-              className="w-24 h-24 object-cover rounded-lg shrink-0"
-            />
-          )}
-          
-          {/* Product Details */}
-          <div className="flex-1">
-            <p className="font-semibold text-gray-800">{download.name}</p>
-            {download.category && (
-              <p className="text-sm text-gray-600">Category: {download.category}</p>
-            )}
-            <p className="text-sm text-gray-600">
-              Purchased on {formatDate(download.purchaseDate)}
-            </p>
-            <div className="flex gap-2 mt-2">
-              {download.formats.map((format) => (
-                <span key={format} className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded">
-                  {format}
-                </span>
-              ))}
-            </div>
-            {download.price && (
-              <p className="text-sm font-medium text-red-600 mt-2">{formatPrice(download.price)}</p>
-            )}
-          </div>
-
-          {/* Download Button */}
-          <button
-            onClick={() => handleDownload(download)}
-            disabled={downloading === download.id}
-            className="flex items-center space-x-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <Download className="h-4 w-4" />
-            <span>{downloading === download.id ? 'Downloading...' : 'Download'}</span>
-          </button>
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
         </div>
       ))}
     </div>
   );
 };
-
-const mockOrders = [
-  { id: 1001, date: '2025-10-01', total: 899, status: 'Completed', items: ['Floral Design', 'Saree Border'] },
-  { id: 1002, date: '2025-09-15', total: 449, status: 'Completed', items: ['Kurthi Pattern'] },
-];
-
-const mockDownloads = [
-  { id: 1, name: 'Floral Blouse Design', purchaseDate: '2025-10-01', formats: ['DST', 'JEF'] },
-  { id: 2, name: 'Traditional Saree Border', purchaseDate: '2025-10-01', formats: ['DST', 'JEF'] },
-  { id: 3, name: 'Modern Kurthi Pattern', purchaseDate: '2025-09-15', formats: ['DST', 'JEF'] },
-];
 
 export default Account;

@@ -100,11 +100,7 @@ const Contact = () => {
 
               <div className="space-y-4">
                 <div className="flex items-start space-x-4">
-<<<<<<< HEAD
                   <MapPin className="h-6 w-6 text-red-600 mt-1 shrink-0" />
-=======
-                  <MapPin className="h-6 w-6 text-red-600 mt-1 flex-shrink-0" />
->>>>>>> 90c42162987c4e3cea6a537cf47863f0739dc0df
                   <div>
                     <h3 className="font-semibold text-gray-800 mb-1">Address</h3>
                     <p className="text-gray-600 text-sm">

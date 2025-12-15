@@ -7,10 +7,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div>
-            <h3 className="text-white text-lg font-bold mb-4">OSA Embroidery</h3>
-            <p className="text-sm mb-4">
-              Power | Precision | Performance
-            </p>
+           <img className='w-48' src="https://res.cloudinary.com/dobuwrfn8/image/upload/v1765785794/osamainlogowide_qa3saa.png" alt="" />
             <p className="text-sm">
               Your trusted source for premium digital embroidery designs.
             </p>
