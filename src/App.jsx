@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import MachineryBasketSidebar from './components/MachineryBasketSidebar';
+import ScrollToTop from './components/ScrollToTop';
 import Home from './pages/Home';
 import Products from './pages/Products';
 import ProductDetail from './pages/ProductDetail';
@@ -22,6 +23,7 @@ import { useEffect, useState } from 'react';
 import GoogleCallback from './pages/GoogleCallback';
 import Orders from './pages/Orders';
 import Machines from './pages/Machines';
+import IntroScreen from './pages/Introscreen';
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);
@@ -41,6 +43,7 @@ function App() {
   
   return (
     <Router>
+      <ScrollToTop />
       <div className="min-h-screen flex flex-col">
         <Header openLogin={openLogin} />
         <main className="flex-1">
@@ -70,24 +73,7 @@ function App() {
         <MachineryBasketSidebar />
         {showLogin && <Login onClose={() => setShowLogin(false)} />}
 
-        {showIntro && (
-        <div
-          className="fixed inset-0 w-full h-full flex items-center justify-center z-50"
-          style={{
-            backgroundImage:
-              "url('https://res.cloudinary.com/dobuwrfn8/image/upload/v1764484611/WhatsApp_Image_2025-11-30_at_12.06.31_4bf232fe_z8xcg5.jpg')",
-            backgroundRepeat: "repeat",
-            backgroundSize: "25px 25px", 
-            backgroundAttachment: "fixed",
-          }}
-        >
-          <img
-            src="https://res.cloudinary.com/dobuwrfn8/image/upload/v1764486573/OSA_LOGO_ANIMATION1_eohmjx.gif"
-            alt="Intro Animation"
-            className="w-[350px] max-w-full h-auto"
-          />
-        </div>
-      )}
+        {showIntro && <IntroScreen />}
       </div>
     </Router>
   );

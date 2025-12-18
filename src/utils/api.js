@@ -1,5 +1,5 @@
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://ecommerce-six-omega.vercel.app';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://api.osaembroidery.com';
 
 export const api = {
   async fetchProducts() {

@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { X, Loader } from 'lucide-react';
 import { formatPrice, showToast } from '../utils/helpers';
 import { api } from '../utils/api';
+import useCartStore from '../store/useCartStore';
 
 const CheckoutModal = ({ isOpen, onClose, items, total, onPaymentSuccess }) => {
   const [loading, setLoading] = useState(false);
+  const { clearCart } = useCartStore();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -49,6 +51,8 @@ const CheckoutModal = ({ isOpen, onClose, items, total, onPaymentSuccess }) => {
 
       // Create order on backend (backend handles Razorpay)
       const orderResponse = await api.createOrder(userId, items, formData);
+      await clearCart();
+
       console.log('Order created:', orderResponse);
 
       // Backend returns payment link - redirect to it

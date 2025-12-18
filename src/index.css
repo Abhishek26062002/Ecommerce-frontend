@@ -28,3 +28,11 @@
     overflow: hidden;
   }
 }
+
+/* portrait screens only */
+@media (orientation: portrait) {
+  .rotate-bg-portrait {
+    transform: rotate(90deg);
+    transform-origin: center;
+  }
+}

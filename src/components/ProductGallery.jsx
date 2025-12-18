@@ -23,11 +23,22 @@ const ProductGallery = ({ images = [] }) => {
   return (
     <div className="space-y-4">
       <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden group">
-        <img
-          src={images[currentIndex]}
-          alt={`Product image ${currentIndex + 1}`}
-          className="w-full h-full object-cover"
-        />
+        <div className="relative w-full h-full overflow-hidden">
+  {/* Auto background from image */}
+  <img
+    src={images[currentIndex]}
+    alt=""
+    className="absolute inset-0 w-full h-full object-contain p-8 blur-xl scale-125 opacity-70"
+  />
+
+  {/* Main image */}
+  <img
+    src={images[currentIndex]}
+    alt={`Product image ${currentIndex + 1}`}
+    className="relative w-full h-full object-contain p-8"
+  />
+</div>
+
 
         {images.length > 1 && (
           <>
@@ -70,11 +81,22 @@ const ProductGallery = ({ images = [] }) => {
                 index === currentIndex ? 'border-red-600' : 'border-gray-200 hover:border-gray-300'
               }`}
             >
-              <img
-                src={image}
-                alt={`Thumbnail ${index + 1}`}
-                className="w-full h-full object-cover"
-              />
+              <div className="relative w-full h-full overflow-hidden rounded-lg">
+  {/* Auto background */}
+  <img
+    src={image}
+    alt=""
+    className="absolute inset-0 w-full h-full object-cover blur-md scale-125 opacity-70"
+  />
+
+  {/* Thumbnail image */}
+  <img
+    src={image}
+    alt={`Thumbnail ${index + 1}`}
+    className="relative w-full h-full object-contain p-4"
+  />
+</div>
+
             </button>
           ))}
         </div>

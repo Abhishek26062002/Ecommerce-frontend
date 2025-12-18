@@ -201,17 +201,30 @@ const Header = ({ openLogin }) => {
               </Link>
             </div>
 
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className={`lg:hidden ${textClasses} ${textHoverClasses} focus:outline-none p-2 ${hoverBgClasses} rounded-lg transition-all`}
-            >
-              {sidebarOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
-            </button>
+            {/* Mobile Actions */}
+<div className="lg:hidden flex items-center gap-3">
+  {/* Cart */}
+  <Link
+    to="/cart"
+    className={`relative ${textClasses} ${textHoverClasses} p-2 rounded-lg`}
+  >
+    <ShoppingCart className="h-6 w-6" />
+    {cartItemCount > 0 && (
+      <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs h-5 w-5 rounded-full flex items-center justify-center font-semibold">
+        {cartItemCount}
+      </span>
+    )}
+  </Link>
+
+  {/* Hamburger */}
+  <button
+    onClick={() => setSidebarOpen(!sidebarOpen)}
+    className={`${textClasses} ${textHoverClasses} p-2 rounded-lg`}
+  >
+    {sidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+  </button>
+</div>
+
           </div>
         </div>
       </header>

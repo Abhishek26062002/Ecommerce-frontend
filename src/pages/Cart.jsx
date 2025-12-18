@@ -74,6 +74,7 @@ const Cart = ({ openLogin }) => {
       if (userId) {
         // You may want to add a clearCart API endpoint
         localStorage.removeItem('osa-cart-storage');
+        console.log('Cleared server cart for user:', userId);
       }
 
       showToast('Order placed successfully!', 'success');

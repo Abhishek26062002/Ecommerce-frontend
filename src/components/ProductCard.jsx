@@ -19,15 +19,28 @@ const ProductCard = ({ product }) => {
     }
   };
 
+  console.log(product);
+
   return (
     <Link to={`/product/${product.id}`} className="group">
       <div className="bg-white rounded-xl border border-gray-300 overflow-hidden transition-all duration-300 hover:-translate-y-1">
         <div className="relative aspect-square overflow-hidden bg-gray-100">
-          <img
-            src={product.images_urls[0] || 'https://via.placeholder.com/400'}
-            alt={product.name}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-          />
+          <div className="relative w-full h-full overflow-hidden group">
+  {/* Background image */}
+  <img
+    src={product.images_urls[0] || 'https://via.placeholder.com/400'}
+    alt=""
+    className="absolute inset-0 w-full h-full object-cover blur-xl scale-125 opacity-70"
+  />
+
+  {/* Main image */}
+  <img
+    src={product.images_urls[0] || 'https://via.placeholder.com/400'}
+    alt={product.name}
+    className="relative w-full h-full object-contain p-4 transition-transform duration-300 group-hover:scale-110"
+  />
+</div>
+
           <button
             onClick={handleToggleWishlist}
             className="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md hover:bg-red-50 transition-colors z-10"
@@ -66,9 +79,9 @@ const ProductCard = ({ product }) => {
           )}
 
             
-          {product.machine_type && (
+          {product?.machine_type && (
   <div className="mt-3 flex flex-wrap gap-2">
-    {product.machine_type.map((type) => (
+    {product?.machine_type.map((type) => (
       <span key={type} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded uppercase">
         {type}
       </span>

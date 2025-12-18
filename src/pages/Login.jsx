@@ -2,7 +2,8 @@ import { useLocation } from "react-router-dom";
 
 const LoginModal = ({ onClose }) => {
   const location = useLocation();
-  const redirectPath = location.state?.from || "/";
+  const redirectPath = location.state?.from || location.pathname || "/";
+
 
   const handleGoogleLogin = () => {
     localStorage.setItem("redirectPath", redirectPath);

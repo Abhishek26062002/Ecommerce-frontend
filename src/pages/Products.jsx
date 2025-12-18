@@ -206,6 +206,7 @@ useEffect(() => {
     console.log('>>> CATEGORY CLICKED:', category);
     setSelectedCategory(category);
     setSelectedSubCategory(null);
+    setSubCategories([]);
     setFilteredProducts([]);
     setLoadingSubCategories(true);
     setCategoryToFetch(category);
@@ -285,7 +286,7 @@ useEffect(() => {
   const isShowingSubCategorySelection =
     selectedCategory !== "all" &&
     !selectedSubCategory &&
-    subCategories.length > 0;
+    (subCategories.length > 0 || loadingSubCategories);
 
   useEffect(() => {
     const observerOptions = {
@@ -635,7 +636,7 @@ useEffect(() => {
                   </div>
                 )}
 
-                {hasMore && !loadingMore && (
+                {hasMore && !loadingMore && selectedCategory === "all" && (
                   <div className="flex justify-center mt-8">
                     <button
                       onClick={fetchMoreProducts}
